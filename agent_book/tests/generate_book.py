@@ -1,12 +1,12 @@
 from faker import Faker
 from random import randint
 from datetime import date, timedelta
-from address_book import AddressBook, Record, DATE_FORMAT, PaginatedAddressBookIterator
+from agent_book import AgentBook, Record, DATE_FORMAT, PaginatedAgentBookIterator
 
-book = AddressBook()
+book = AgentBook()
 
 
-def generate_address_book(count_of_elements):
+def generate_agent_book(count_of_elements):
     if count_of_elements == '':
         count_of_elements = 10
     print(f'\nGenerate random phone book with {count_of_elements} elements ...')
@@ -26,11 +26,11 @@ def generate_address_book(count_of_elements):
 
     # Iterate by 3 items per page
     print('\nIterate by 3 items per page:')
-    for i, records in enumerate(PaginatedAddressBookIterator(book, 3)):
+    for i, records in enumerate(PaginatedAgentBookIterator(book, 3)):
         print(f"Portion {i + 1}: ")
         for pi in range(len(records)):
             print(f"{records[pi]}")
 
 
 if __name__ == '__main__':
-    generate_address_book(100)
+    generate_agent_book(100)
