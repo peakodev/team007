@@ -1,6 +1,6 @@
-from address_book.exceptions import CustomExceptions, WrongNameException, WrongPhoneException, WrongBirthdayException, \
+from agent_book.exceptions import CustomExceptions, WrongNameException, WrongPhoneException, WrongBirthdayException, \
     NameNotFoundException, TooSmallQueryException
-from address_book.fs import datadir
+from agent_book.fs import datadir
 from collections import UserDict
 from datetime import date, datetime
 import re
@@ -142,22 +142,22 @@ class Record:
         return f"{ret} phones: {'; '.join(p.value for p in self.phones)}"
 
 
-class AddressBook(UserDict):
-    dump_file_name = datadir() / 'address_book.bin'
+class AgentBook(UserDict):
+    dump_file_name = datadir() / 'agent_book.bin'
 
     @staticmethod
     def serialize(obj):
-        with open(AddressBook.dump_file_name, "wb") as file:
+        with open(AgentBook.dump_file_name, "wb") as file:
             pickle.dump(obj, file)
 
     @staticmethod
     def deserialize():
         try:
-            with open(AddressBook.dump_file_name, "rb") as file:
+            with open(AgentBook.dump_file_name, "rb") as file:
                 obj = pickle.load(file)
             return obj
         except FileNotFoundError:
-            return AddressBook()
+            return AgentBook()
 
     def add(self, name, phone, birthday: str = None):
         self.add_record(Record(name=name, birthday=birthday).add_phone(phone))

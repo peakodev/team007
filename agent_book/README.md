@@ -1,6 +1,6 @@
-# Address Book
+# Agent Address Book
 
-This application give you ability to use prepared classes for making Address Book with ability to manipulate with rows of book
+This application give you ability to use prepared classes for making Agent Address Book with ability to manipulate with rows of book
 
 ## Features
 
@@ -29,7 +29,7 @@ pip install --user pipenv
 
 ```bash
 git clone git@github.com:peakodev/team007.git
-cd address_book
+cd agent_book
 ```
 
 2. Install the application and its dependencies using `pipenv`:
@@ -44,10 +44,10 @@ This command will create a virtual environment and install all the necessary dep
 
 If you would like to contribute to the development of this application, please follow these steps:
 
- - AddressBook
+ - AgentBook
  - Record
- - AddressBookIterator
- - PaginatedAddressBookIterator
+ - AgentBookIterator
+ - PaginatedAgentBookIterator
  - CustomExceptions
  - DATE_FORMAT
 
