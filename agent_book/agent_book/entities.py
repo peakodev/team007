@@ -1,5 +1,5 @@
 from agent_book.exceptions import CustomExceptions, WrongNameException, WrongPhoneException, WrongBirthdayException, \
-    NameNotFoundException, TooSmallQueryException
+    NameNotFoundException, TooSmallQueryException, WrongAddressLineException
 from agent_book.fs import datadir
 from collections import UserDict
 from datetime import date, datetime
@@ -92,6 +92,12 @@ class Birthday(Field):
 
     def __str__(self):
         return self._value.strftime(DATE_FORMAT)
+
+
+class AddressLine(Field):
+    def _validate(self, value):
+        if not (isinstance(value, str) and len(value) >= 3 and len(value) <= 50):
+            raise WrongAddressLineException
 
 
 class Record:

@@ -6,6 +6,10 @@ class WrongNameException(CustomExceptions):
     def __init__(self, msg="Please provide name with at least 3 characters"):
         super().__init__(msg)
 
+class WrongAddressLineException(CustomExceptions):
+    def __init__(self, msg="Please provide address line with at least 3 characters and no more than 50 characters"):
+        super().__init__(msg)
+
 
 class WrongPhoneException(CustomExceptions):
     def __init__(self, msg="Wrong phone number"):
