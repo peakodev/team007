@@ -1,7 +1,8 @@
 from faker import Faker
 from random import randint, choice
 from datetime import date, timedelta
-from agent_book import AgentBook, Record, PaginatedAgentBookIterator, Address, DATE_FORMAT, UKRAINIAN_REGIONS
+from agent_book import (AgentBook, Record, PaginatedAgentBookIterator, Address, DATE_FORMAT, UKRAINIAN_REGIONS,
+                        NameNotFoundException)
 
 book = AgentBook()
 
@@ -18,8 +19,11 @@ def generate_agent_book(count_of_elements):
         country = choice(['Україна', 'USA'])
         temp_fake = fake_ua if country == 'Україна' else fake_us
         name = temp_fake.first_name_female() if i % 2 else temp_fake.first_name_male()
-        if book.find_record(name) is not None:
+        try:
+            book.find_record(name)
             name = f'{name} {i}'
+        except NameNotFoundException:
+            pass
         rec = Record(f"{name}")
         if choice([True, False]):
             birth = def_date + timedelta(days=i)

@@ -4,21 +4,19 @@ from .address_entities import Address
 
 class Record:
 
-    def __init__(self, name, email: str = None, birthday: str = None):
-        self.name = Name(name)
+    def __init__(self, name):
+        self.__name = Name(name)
         self._birthday = None
-        if birthday is not None:
-            self.birthday = birthday
         self._email = None
-        if email is not None:
-            self.email = email
-        self.phones = []
         self._address = None
+        self.phones = []
 
-    def add_phone(self, phone):
-        phone_obj = Phone(phone)
-        self.phones.append(phone_obj)
-        return self
+    @property
+    def name(self) -> Name:
+        return self.__name
+
+    def update_name(self, name: str):
+        self.__name = Name(name)
 
     @property
     def email(self) -> Email:
@@ -43,6 +41,11 @@ class Record:
     @address.setter
     def address(self, address: Address):
         self._address = address
+
+    def add_phone(self, phone):
+        phone_obj = Phone(phone)
+        self.phones.append(phone_obj)
+        return self
 
     def remove_phone(self, phone):
         phone_obj = self.find_phone(phone)

@@ -43,3 +43,8 @@ class NameNotFoundException(AgentBookException):
 class TooSmallQueryException(AgentBookException):
     def __init__(self, msg="Please provide query with at least 3 characters"):
         super().__init__(msg)
+
+
+class NameAlreadyExistException(AgentBookException):
+    def __init__(self, msg="Name already exist in book, please try to add another name"):
+        super().__init__(msg)

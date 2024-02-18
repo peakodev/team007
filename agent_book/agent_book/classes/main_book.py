@@ -4,7 +4,8 @@ from collections import UserDict
 from ..fs import datadir
 from .record import Record
 from .book_fields import Phone
-from ..exceptions import TooSmallQueryException, NameNotFoundException
+from .address_entities import Address
+from ..exceptions import TooSmallQueryException, NameNotFoundException, NameAlreadyExistException
 
 
 class AgentBook(UserDict):
@@ -24,22 +25,20 @@ class AgentBook(UserDict):
         except FileNotFoundError:
             return AgentBook()
 
-    def add(self, name, phone, birthday: str = None):
-        self.add_record(Record(name=name, birthday=birthday).add_phone(phone))
+    def add(self, name, phone: str = None, email: str = None, birthday: str = None) -> Record:
+        if self.data.get(name) is not None:
+            raise NameAlreadyExistException
+        record = Record(name)
+        if birthday is not None:
+            record.birthday = birthday
+        if email is not None:
+            record.email = email
+        if phone is not None:
+            record.add_phone(phone)
+        return record
 
-    def add_record(self, record):
+    def add_record(self, record: Record) -> None:
         self.data[record.name.value] = record
-
-    def find_record(self, name) -> Record:
-        return self.data.get(name, None)
-
-    def find(self, query):
-        if len(query) < 3:
-            raise TooSmallQueryException
-        in_names = [name for name in self.data.keys() if query.lower() in name.lower()]
-        in_phones = [record.name.value for record in self.data.values() if record.is_query_in_phones(query)]
-        all_names = list(set(in_names + in_phones))
-        return [self.data.get(key) for key in all_names] if len(all_names) > 0 else []
 
     def delete(self, name):
         self.data.pop(name, None)
@@ -53,14 +52,30 @@ class AgentBook(UserDict):
 
     def add_birthday(self, name: str, birthday: str):
         record = self.find_record(name)
-        if record is not None:
-            record.birthday = str(birthday)
-        else:
-            raise NameNotFoundException
+        record.birthday = str(birthday)
+
+    def add_email(self, name: str, email: str):
+        record = self.find_record(name)
+        record.email = str(email)
+
+    def add_address(self, name: str, address: Address):
+        record = self.find_record(name)
+        record.address = address
 
     def get_phones(self, name) -> list[Phone]:
         record = self.find_record(name)
-        if record is not None:
-            return record.phones
-        else:
+        return record.phones
+
+    def find_record(self, name) -> Record:
+        record = self.data.get(name, None)
+        if record is None:
             raise NameNotFoundException
+        return record
+
+    def find(self, query):
+        if len(query) < 3:
+            raise TooSmallQueryException
+        in_names = [name for name in self.data.keys() if query.lower() in name.lower()]
+        in_phones = [record.name.value for record in self.data.values() if record.is_query_in_phones(query)]
+        all_names = list(set(in_names + in_phones))
+        return [self.data.get(key) for key in all_names] if len(all_names) > 0 else []
