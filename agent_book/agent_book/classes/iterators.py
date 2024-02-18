@@ -1,4 +1,4 @@
-from agent_book.entities import AgentBook
+from .main_book import AgentBook
 
 
 class AgentBookIterator:

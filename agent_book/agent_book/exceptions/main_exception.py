@@ -1,0 +1,2 @@
+class AgentBookException(Exception):
+    pass
