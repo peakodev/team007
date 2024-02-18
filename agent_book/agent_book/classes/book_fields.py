@@ -2,7 +2,7 @@ import re
 from datetime import date, datetime
 
 from .field import Field, validator
-from ..exceptions import WrongBirthdayException, WrongNameException, WrongPhoneException
+from ..exceptions import WrongBirthdayException, WrongNameException, WrongPhoneException, WrongEmailException
 from ..enums import DATE_FORMAT
 
 
@@ -14,9 +14,14 @@ class Name(Field):
 
 class Phone(Field):
     def _validate(self, value):
-        pattern = r'\b\d{10}\b'
-        if not bool(re.search(pattern, value)):
+        if not bool(re.search(r'\b\d{10}\b', value)):
             raise WrongPhoneException
+
+
+class Email(Field):
+    def _validate(self, value):
+        if not bool(re.search(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', value)):
+            raise WrongEmailException
 
 
 class Birthday(Field):

@@ -1,6 +1,7 @@
 from .main_exception import AgentBookException
 from .exceptions import (EnumValueNotExist, WrongCountryException, WrongNameException, WrongNameLengthException,
-                        WrongPhoneException, WrongBirthdayException, NameNotFoundException, TooSmallQueryException)
+                         WrongPhoneException, WrongBirthdayException, NameNotFoundException, TooSmallQueryException,
+                         WrongEmailException)
 
 __all__ = [
     'AgentBookException',
@@ -11,5 +12,6 @@ __all__ = [
     'WrongPhoneException',
     'WrongBirthdayException',
     'NameNotFoundException',
-    'TooSmallQueryException'
+    'TooSmallQueryException',
+    'WrongEmailException'
 ]
