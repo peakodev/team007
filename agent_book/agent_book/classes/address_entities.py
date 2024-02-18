@@ -94,7 +94,7 @@ class Country(Field):
 
 
 class Address:
-    def __init__(self, country, region, city, zip_code, address_line):
+    def __init__(self, country, region, city, zip_code, address_line=None):
         self._country = None
         self._region = None
         self._city = None
