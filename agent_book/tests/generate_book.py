@@ -17,20 +17,26 @@ def generate_agent_book(count_of_elements):
     for i in range(int(count_of_elements)):
         country = choice(['Україна', 'USA'])
         temp_fake = fake_ua if country == 'Україна' else fake_us
-        birth = def_date + timedelta(days=i)
         name = temp_fake.first_name_female() if i % 2 else temp_fake.first_name_male()
         if book.find_record(name) is not None:
             name = f'{name} {i}'
-        rec = Record(f"{name}", birth.strftime(DATE_FORMAT))
+        rec = Record(f"{name}")
+        if choice([True, False]):
+            birth = def_date + timedelta(days=i)
+            rec.birthday = birth.strftime(DATE_FORMAT)
+        if choice([True, False]):
+            rec.email = temp_fake.email()
         rec.add_phone(str(randint(1000000000, 9999999999)))
-        rec.add_phone(str(randint(1000000000, 9999999999)))
-        rec.address = Address(
-            country,
-            choice(UKRAINIAN_REGIONS) if country == 'Україна' else temp_fake.state(),
-            temp_fake.city(),
-            temp_fake.postcode() if country == 'Україна' else temp_fake.zipcode_plus4(),
-            temp_fake.street_address()
-        )
+        if choice([True, False]):
+            rec.add_phone(str(randint(1000000000, 9999999999)))
+        if choice([True, False]):
+            rec.address = Address(
+                country,
+                choice(UKRAINIAN_REGIONS) if country == 'Україна' else temp_fake.state(),
+                temp_fake.city(),
+                temp_fake.postcode() if country == 'Україна' else temp_fake.zipcode_plus4(),
+                temp_fake.street_address()
+            )
         book.add_record(rec)
         print(rec)
 

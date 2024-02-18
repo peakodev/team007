@@ -1,14 +1,17 @@
-from .book_fields import Name, Phone, Birthday
+from .book_fields import Name, Phone, Birthday, Email
 from .address_entities import Address
 
 
 class Record:
 
-    def __init__(self, name, birthday: str = None):
+    def __init__(self, name, email: str = None, birthday: str = None):
         self.name = Name(name)
         self._birthday = None
         if birthday is not None:
             self.birthday = birthday
+        self._email = None
+        if email is not None:
+            self.email = email
         self.phones = []
         self._address = None
 
@@ -16,6 +19,14 @@ class Record:
         phone_obj = Phone(phone)
         self.phones.append(phone_obj)
         return self
+
+    @property
+    def email(self) -> Email:
+        return self._email
+
+    @email.setter
+    def email(self, email: Email):
+        self._email = Email(email)
 
     @property
     def birthday(self) -> Birthday:
@@ -57,10 +68,13 @@ class Record:
             return self.birthday.days_to_birthday()
 
     def __str__(self):
-        ret = f"Contact name: {self.name.value},"
+        ret = f"Agent name: {self.name.value}"
+        if self.email is not None:
+            ret += f", email: {self.email}"
         if self.birthday is not None:
-            ret += f" birthday: {str(self.birthday)}, days to birth: {self.days_to_birthday()}"
-        ret += f", phones: {'; '.join(p.value for p in self.phones)}"
+            ret += f", birthday: {str(self.birthday)}, days to birth: {self.days_to_birthday()}"
+        if len(self.phones):
+            ret += f", {'phones' if len(self.phones) > 1 else 'phone'}: {'; '.join(p.value for p in self.phones)}"
         if self.address is not None:
             ret += f", address: {str(self.address)}"
         return ret

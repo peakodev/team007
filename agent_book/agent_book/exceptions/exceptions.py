@@ -25,6 +25,11 @@ class WrongPhoneException(AgentBookException):
         super().__init__(msg)
 
 
+class WrongEmailException(AgentBookException):
+    def __init__(self, msg="Wrong email address"):
+        super().__init__(msg)
+
+
 class WrongBirthdayException(AgentBookException):
     def __init__(self, msg="Wrong birthday value: please enter in valid format like '1990-12-20'"):
         super().__init__(msg)
