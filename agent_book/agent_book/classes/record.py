@@ -1,22 +1,22 @@
-from .book_fields import Name, Phone, Birthday, Email
+from .book_fields import CallSign, Phone, Birthday, Email
 from .address_entities import Address
 
 
 class Record:
 
-    def __init__(self, name):
-        self.__name = Name(name)
+    def __init__(self, call_sign):
+        self.__call_sign = CallSign(call_sign)
         self._birthday = None
         self._email = None
         self._address = None
         self.phones = []
 
     @property
-    def name(self) -> Name:
-        return self.__name
+    def call_sign(self) -> CallSign:
+        return self.__call_sign
 
-    def update_name(self, name: str):
-        self.__name = Name(name)
+    def update_name(self, call_sign: str):
+        self.__call_sign = CallSign(call_sign)
 
     @property
     def email(self) -> Email:
@@ -67,17 +67,17 @@ class Record:
         return bool(len(found_phone))
 
     def days_to_birthday(self):
-        if self.birthday is not None:
+        if self.birthday:
             return self.birthday.days_to_birthday()
 
     def __str__(self):
-        ret = f"Agent name: {self.name.value}"
-        if self.email is not None:
+        ret = f"Agent call sign: {self.call_sign.value}"
+        if self.email:
             ret += f", email: {self.email}"
-        if self.birthday is not None:
+        if self.birthday:
             ret += f", birthday: {str(self.birthday)}, days to birth: {self.days_to_birthday()}"
         if len(self.phones):
             ret += f", {'phones' if len(self.phones) > 1 else 'phone'}: {'; '.join(p.value for p in self.phones)}"
-        if self.address is not None:
+        if self.address:
             ret += f", address: {str(self.address)}"
         return ret

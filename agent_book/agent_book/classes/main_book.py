@@ -5,7 +5,7 @@ from ..fs import datadir
 from .record import Record
 from .book_fields import Phone
 from .address_entities import Address
-from ..exceptions import TooSmallQueryException, NameNotFoundException, NameAlreadyExistException
+from ..exceptions import TooSmallQueryException, CallSignNotFoundException, CallSignAlreadyExistException
 
 
 class AgentBook(UserDict):
@@ -25,57 +25,67 @@ class AgentBook(UserDict):
         except FileNotFoundError:
             return AgentBook()
 
-    def add(self, name, phone: str = None, email: str = None, birthday: str = None) -> Record:
-        if self.data.get(name) is not None:
-            raise NameAlreadyExistException
-        record = Record(name)
-        if birthday is not None:
+    def add(self, call_sign, phone: str = None, email: str = None, birthday: str = None) -> Record:
+        if self.data.get(call_sign, None):
+            raise CallSignAlreadyExistException(call_sign)
+        record = Record(call_sign)
+        if birthday:
             record.birthday = birthday
-        if email is not None:
+        if email:
             record.email = email
-        if phone is not None:
+        if phone:
             record.add_phone(phone)
+        self.add_record(record)
         return record
 
+    def change_call_sign(self, call_sign, new_call_sign):
+        record = self.find_record(call_sign)
+        if self.data.get(new_call_sign, None):
+            msg = f"You cant change call sign '{call_sign}' to '{new_call_sign}', because the last one is exist in book"
+            raise CallSignAlreadyExistException(value=new_call_sign, msg=msg)
+        self.data.pop(call_sign, None)
+        record.update_name(new_call_sign)
+        self.add_record(record)
+
     def add_record(self, record: Record) -> None:
-        self.data[record.name.value] = record
+        if self.data.get(record.call_sign.value):
+            raise CallSignAlreadyExistException(value=record.call_sign.value)
+        self.data[record.call_sign.value] = record
 
-    def delete(self, name):
-        self.data.pop(name, None)
+    def delete(self, call_sign):
+        self.find_record(call_sign)
+        self.data.pop(call_sign, None)
 
-    def add_phone(self, name, phone):
-        record = self.find_record(name)
-        if record is not None:
-            record.add_phone(str(phone))
-        else:
-            raise NameNotFoundException
+    def add_phone(self, call_sign, phone):
+        record = self.find_record(call_sign)
+        record.add_phone(str(phone))
 
-    def add_birthday(self, name: str, birthday: str):
-        record = self.find_record(name)
+    def add_birthday(self, call_sign: str, birthday: str):
+        record = self.find_record(call_sign)
         record.birthday = str(birthday)
 
-    def add_email(self, name: str, email: str):
-        record = self.find_record(name)
+    def add_email(self, call_sign: str, email: str):
+        record = self.find_record(call_sign)
         record.email = str(email)
 
-    def add_address(self, name: str, address: Address):
-        record = self.find_record(name)
+    def add_address(self, call_sign: str, address: Address):
+        record = self.find_record(call_sign)
         record.address = address
 
-    def get_phones(self, name) -> list[Phone]:
-        record = self.find_record(name)
+    def get_phones(self, call_sign) -> list[Phone]:
+        record = self.find_record(call_sign)
         return record.phones
 
-    def find_record(self, name) -> Record:
-        record = self.data.get(name, None)
-        if record is None:
-            raise NameNotFoundException
+    def find_record(self, call_sign) -> Record:
+        record = self.data.get(call_sign, None)
+        if not record:
+            raise CallSignNotFoundException(call_sign)
         return record
 
     def find(self, query):
         if len(query) < 3:
-            raise TooSmallQueryException
-        in_names = [name for name in self.data.keys() if query.lower() in name.lower()]
-        in_phones = [record.name.value for record in self.data.values() if record.is_query_in_phones(query)]
-        all_names = list(set(in_names + in_phones))
-        return [self.data.get(key) for key in all_names] if len(all_names) > 0 else []
+            raise TooSmallQueryException(query)
+        in_call_signs = [call_sign for call_sign in self.data.keys() if query.lower() in call_sign.lower()]
+        in_phones = [record.call_sign.value for record in self.data.values() if record.is_query_in_phones(query)]
+        all_call_signs = list(set(in_call_signs + in_phones))
+        return [self.data.get(key) for key in all_call_signs] if len(all_call_signs) > 0 else []
