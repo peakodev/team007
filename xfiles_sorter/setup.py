@@ -8,7 +8,7 @@ setup(
     },
     description='XFile sorter',
     author='Team007',
-    author_email='peakodev@gmail.com',
+    author_email='unfeeling35@gmail.com',
     packages=find_namespace_packages(),
     install_requires=[],
 )
