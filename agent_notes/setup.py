@@ -8,7 +8,7 @@ setup(
     },
     description='Agent Notes',
     author='Team007',
-    author_email='peakodev@gmail.com',
+    author_email='serzhu1985@gmail.com',
     packages=find_namespace_packages(),
     install_requires=[],
 )
