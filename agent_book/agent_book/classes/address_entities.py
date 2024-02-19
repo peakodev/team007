@@ -34,7 +34,7 @@ def get_enum_by_value(enum_class, value):
 class CountryBasedField(Field):
     def __init__(self, value, country: CountryEnum):
         if not country:
-            raise WrongCountryException()
+            raise WrongCountryException(value)
         self._country_enum = country
         super().__init__(value)
 
@@ -42,7 +42,7 @@ class CountryBasedField(Field):
 class AddressLine(Field):
     def _validate(self, value):
         if not (isinstance(value, str) and 3 <= len(value) <= 250):
-            raise WrongNameLengthException(field='address line', max_len=250)
+            raise WrongNameLengthException(field='address line', value=value, max_len=250)
 
 
 class ZipCode(CountryBasedField):
@@ -73,7 +73,7 @@ class Region(CountryBasedField):
 class City(Field):
     def _validate(self, value):
         if not (isinstance(value, str) and 3 <= len(value) <= 50):
-            raise WrongNameLengthException(field='city')
+            raise WrongNameLengthException(field='city', value=value)
 
 
 class Country(Field):

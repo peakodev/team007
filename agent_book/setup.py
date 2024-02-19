@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name='agent_book',
-    version='0.0.4',
+    version='0.0.5',
     entry_points={
         'console_scripts': []
     },

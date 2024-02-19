@@ -1,6 +1,6 @@
 from .classes import AgentBook, Address, Record, AgentBookIterator, PaginatedAgentBookIterator
 from .enums import DATE_FORMAT, UKRAINIAN_REGIONS
-from .exceptions import AgentBookException, NameNotFoundException
+from .exceptions import AgentBookException, CallSignNotFoundException, CallSignAlreadyExistException
 
 __all__ = [
     'AgentBook',
@@ -8,7 +8,8 @@ __all__ = [
     'AgentBookIterator',
     'PaginatedAgentBookIterator',
     'AgentBookException',
-    'NameNotFoundException',
+    'CallSignNotFoundException',
+    'CallSignAlreadyExistException',
     'Address',
     'DATE_FORMAT',
     'UKRAINIAN_REGIONS'

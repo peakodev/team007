@@ -2,26 +2,30 @@ import re
 from datetime import date, datetime
 
 from .field import Field, validator
-from ..exceptions import WrongBirthdayException, WrongNameException, WrongPhoneException, WrongEmailException
+from ..exceptions import WrongBirthdayException, WrongCallSignException, WrongPhoneException, WrongEmailException
 from ..enums import DATE_FORMAT
 
 
-class Name(Field):
+class CallSign(Field):
     def _validate(self, value):
-        if not (isinstance(value, str) and len(value) >= 3):
-            raise WrongNameException
+        # Regular expression to match a string with only English or Ukrainian letters, at least 3 characters long
+        # English letters: a-zA-Z
+        # Ukrainian letters range: \u0400-\u04FF
+        pattern = r'^[a-zA-Z\u0400-\u04FFʼ\']{3,}$'
+        if not bool(re.search(pattern, value)):
+            raise WrongCallSignException(value)
 
 
 class Phone(Field):
     def _validate(self, value):
         if not bool(re.search(r'\b\d{10}\b', value)):
-            raise WrongPhoneException
+            raise WrongPhoneException(value)
 
 
 class Email(Field):
     def _validate(self, value):
         if not bool(re.search(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', value)):
-            raise WrongEmailException
+            raise WrongEmailException(value)
 
 
 class Birthday(Field):
@@ -39,10 +43,10 @@ class Birthday(Field):
         try:
             birthday = self.__convert_to_date(value)
         except ValueError:
-            raise WrongBirthdayException
+            raise WrongBirthdayException(value)
 
         if birthday > date.today():
-            raise WrongBirthdayException("Birthday have to be in the past")
+            raise WrongBirthdayException(value, "Birthday have to be in the past")
 
     def days_to_birthday(self) -> int:
         today = date.today()

@@ -1,18 +1,18 @@
 from .main_exception import AgentBookException
-from .exceptions import (EnumValueNotExist, WrongCountryException, WrongNameException, WrongNameLengthException,
-                         WrongPhoneException, WrongBirthdayException, NameNotFoundException, TooSmallQueryException,
-                         WrongEmailException, NameAlreadyExistException)
+from .exceptions import (EnumValueNotExist, WrongCountryException, WrongCallSignException, WrongNameLengthException,
+                         WrongPhoneException, WrongBirthdayException, CallSignNotFoundException, TooSmallQueryException,
+                         WrongEmailException, CallSignAlreadyExistException)
 
 __all__ = [
     'AgentBookException',
     'EnumValueNotExist',
     'WrongCountryException',
-    'WrongNameException',
+    'WrongCallSignException',
     'WrongNameLengthException',
     'WrongPhoneException',
     'WrongBirthdayException',
-    'NameNotFoundException',
+    'CallSignNotFoundException',
     'TooSmallQueryException',
     'WrongEmailException',
-    'NameAlreadyExistException'
+    'CallSignAlreadyExistException'
 ]
