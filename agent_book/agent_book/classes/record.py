@@ -1,5 +1,5 @@
 from .book_fields import CallSign, Phone, Birthday, Email
-from .address_entities import Address
+from .address_fields import Address
 
 
 class Record:
