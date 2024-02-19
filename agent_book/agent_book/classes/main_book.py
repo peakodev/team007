@@ -4,7 +4,7 @@ from collections import UserDict
 from ..fs import datadir
 from .record import Record
 from .book_fields import Phone
-from .address_entities import Address
+from .address_fields import Address
 from ..exceptions import TooSmallQueryException, CallSignNotFoundException, CallSignAlreadyExistException
 
 
