@@ -1,5 +1,5 @@
 # from agent_notes import AgentNotes
-#from entities import AgentNotes
+from agent_notes import AgentNotes
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer
@@ -79,9 +79,9 @@ def input_handler(input_string):
     entered_command = ''
     for i in input_string:
         entered_command += ''.join(i)
-        print(entered_command)
+        #print(entered_command)
         if entered_command in Bot().commands.keys():
-            return entered_command, input_string[len(entered_command):]
+            return entered_command, input_string[len(entered_command):].strip()
     raise ValueError
 
 
