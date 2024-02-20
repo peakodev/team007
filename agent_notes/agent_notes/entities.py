@@ -1,8 +1,8 @@
 from collections import UserDict
 from pathlib import Path
-from format import colors, wrap, splitted_text, HEADER, SEPARATOR
-from iterators import AgentNotesIterator
-from exceptions import WrongNoteIDException, WrongNoteTextException, WrongNoteTagException
+from .format import colors, wrap, splitted_text, HEADER, SEPARATOR
+from .iterators import AgentNotesIterator
+from .exceptions import WrongNoteIDException, WrongNoteTextException, WrongNoteTagException
 import copy
 import pickle
 
@@ -82,7 +82,7 @@ class Note:
         if string in self.note_text.value:
             return self.note_text.value
     
-    def remove_tag(self, tag):
+    def remove_tag(self,  tag):
         for t in self.tags:
             if tag == t.value:
                 self.tags.remove(t)

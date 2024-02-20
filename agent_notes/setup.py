@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(
-    name='agent_notes',
+    name='Agent Notes',
     version='0.0.1',
     entry_points={
         'console_scripts': []
