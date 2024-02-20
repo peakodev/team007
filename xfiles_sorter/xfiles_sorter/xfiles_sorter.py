@@ -31,21 +31,21 @@ def remove_empty_folders(folder_path):
             current_folder = os.path.join(root, directory)
             try:
                 os.rmdir(current_folder)
-                print(f"Empty secret folder removed: {current_folder}")
+                print(f"Folder purged of contents: {current_folder}")
             except OSError as e:
                 # Error message printing removed to not display non-empty folder errors
                 pass
 
 
 def organize_files(folder_path):
-    folders_to_ignore = ['archives', 'video', 'audio', 'documents', 'images', 'other']
+    folders_to_ignore = ['archived intel', 'classified footage', 'covert audio', 'top-secret documentss', 'sensitive imager', 'miscellaneous classified data']
     files_moved_count = {
-        'images': 0,
-        'documents': 0,
-        'audio': 0,
-        'video': 0,
-        'archives': 0,
-        'other': 0
+        'sensitive imager': 0,
+        'top-secret documents': 0,
+        'covert audio': 0,
+        'classified footage': 0,
+        'archived intel': 0,
+        'miscellaneous classified data': 0
     }
 
     for folder in folders_to_ignore:
@@ -67,54 +67,34 @@ def organize_files(folder_path):
             file_extension = os.path.splitext(file_name)[1][1:].lower()
 
             if file_extension in ['jpeg', 'png', 'jpg', 'svg']:
-                shutil.move(file_path, os.path.join(folder_path, 'images', normalized_name))
-                files_moved_count['images'] += 1
+                shutil.move(file_path, os.path.join(folder_path, 'sensitive imager', normalized_name))
+                files_moved_count['sensitive imager'] += 1
             elif file_extension in ['doc', 'docx', 'txt', 'pdf', 'xlsx', 'pptx']:
-                shutil.move(file_path, os.path.join(folder_path, 'documents', normalized_name))
-                files_moved_count['documents'] += 1
+                shutil.move(file_path, os.path.join(folder_path, 'top-secret documents', normalized_name))
+                files_moved_count['top-secret documents'] += 1
             elif file_extension in ['mp3', 'ogg', 'wav', 'amr']:
-                shutil.move(file_path, os.path.join(folder_path, 'audio', normalized_name))
-                files_moved_count['audio'] += 1
+                shutil.move(file_path, os.path.join(folder_path, 'covert audio', normalized_name))
+                files_moved_count['covert audio'] += 1
             elif file_extension in ['avi', 'mp4', 'mov', 'mkv']:
-                shutil.move(file_path, os.path.join(folder_path, 'video', normalized_name))
-                files_moved_count['video'] += 1
+                shutil.move(file_path, os.path.join(folder_path, 'classified footage', normalized_name))
+                files_moved_count['classified footage'] += 1
             elif file_extension in ['zip', 'gz', 'tar']:
                 try:
                     if os.path.exists(file_path):
                         with zipfile.ZipFile(file_path, 'r') as zip_ref:
-                            zip_ref.extractall(os.path.join(folder_path, 'archives', normalized_name))
+                            zip_ref.extractall(os.path.join(folder_path, 'archived intel', normalized_name))
                         os.remove(file_path)
-                        files_moved_count['archives'] += 1
+                        files_moved_count['archived intel'] += 1
                         continue
                     else:
-                        print(f"File not found: {file_path}")
+                        print(f"Classified Document Unavailable: {file_path}")
                 except zipfile.BadZipFile:
                     os.remove(file_path)
             else:
-                shutil.move(file_path, os.path.join(folder_path, 'other', normalized_name))
-                files_moved_count['other'] += 1
+                shutil.move(file_path, os.path.join(folder_path, 'miscellaneous classified data', normalized_name))
+                files_moved_count['miscellaneous classified data'] += 1
 
     remove_empty_folders(folder_path)
-    print("Folder sorting completed successfully.")
+    print("Secure Directory Organization Complete.")
     for category, count in files_moved_count.items():
         print(f"{count} files moved to {category}.")
-
-
-def main():
-    import sys
-
-    if len(sys.argv) != 2:
-        print("Usage: python xfiles_sorter.py /path/to/directory")
-        sys.exit(1)
-
-    folder_path = sys.argv[1]
-
-    if not os.path.exists(folder_path):
-        print(f"Folder {folder_path} does not exist.")
-        sys.exit(1)
-
-    organize_files(folder_path)
-
-
-if __name__ == "__main__":
-    main()
