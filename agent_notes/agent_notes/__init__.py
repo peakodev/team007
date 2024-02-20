@@ -5,5 +5,6 @@ from .entities import AgentNotes, Note
 from .iterators import AgentNotesIterator, PaginatedAgentNotesIterator
 from .format import colors, HEADER, SEPARATOR
 from .exceptions import WrongNoteIDException, WrongNoteTextException, WrongNoteTagException
+from .test_notes import generate_notes, test_output
 
-__all__ = ['AgentNotes', 'Note', 'colors', 'HEADER', 'SEPARATOR', 'AgentNotesIterator', 'PaginatedAgentNotesIterator', 'WrongNoteIDException', 'WrongNoteTextException', 'WrongNoteTagException']
+__all__ = ['AgentNotes', 'Note', 'colors', 'HEADER', 'SEPARATOR', 'AgentNotesIterator', 'PaginatedAgentNotesIterator', 'generate_notes', 'test_output', 'WrongNoteIDException', 'WrongNoteTextException', 'WrongNoteTagException']
