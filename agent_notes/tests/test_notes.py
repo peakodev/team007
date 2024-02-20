@@ -1,8 +1,8 @@
-import sys
-sys.path.insert(1,'C:\\Work\\team007\\team007\\agent_notes')
+#import sys
+#sys.path.insert(1,'C:\\Work\\team007\\team007\\agent_notes')
 
-from agent_notes.entities import AgentNotes
-from agent_notes.iterators import PaginatedAgentNotesIterator
+from agent_notes import AgentNotes
+from agent_notes import PaginatedAgentNotesIterator
 
 notes1 = AgentNotes()
 
