@@ -4,11 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-agent_book = {file = "."}
-faker = "*"
-setuptools = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3.11"
