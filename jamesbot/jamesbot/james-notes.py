@@ -1,9 +1,13 @@
 # from agent_notes import AgentNotes
 from agent_notes import AgentNotes
+from agent_book import AgentBook
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer
 
+# MyBook = AgentBook().deserialize()
+# MyBook.add("Orest")
+# print(MyBook.find_record("Orest"))
 
 def show_help():
     available_commands = {
@@ -14,7 +18,7 @@ def show_help():
         'remove note': "remove existing note by id",
         'find notes': 'find notes by any matches in text or id',
         'exit': "for exit",
-        'help': show_help
+        'help': "show help"
     }
     for key, description in available_commands.items():
         print("{:<10} -> {}".format(key, description))
@@ -91,7 +95,7 @@ def command_handler(command, input_string):
         text, *tag = input_string.strip().split('--')
         ids = None
         if text.strip().split(' ', 1)[0].isdigit():
-            ids, *text = text.strip().split(' ', 1)
+            ids, *text = text.strip().split(' ', 1)         # Does not pars tags for edit note
             user_command(ids, *text)
             return
         user_command(text, *tag)
@@ -109,14 +113,15 @@ def bot_start():
         'edit note': bot.notes.edit_note,
         'remove note': bot.notes.remove_note,
         'find notes': bot.notes.find_notes,
-        'help': show_help
+        'help': show_help,
+        'generate_notes': bot.notes.generate_notes
     }
     bot.commands = COMMANDS
     while bot.running:
         try:
             user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar, style=style, rprompt=rprompt)
             user_command, input_string = input_handler(str(user_input))
-            print(len(input_string))
+            #print(len(input_string))
             command_handler(user_command, input_string)
         except Exception as e:
             print(e)
