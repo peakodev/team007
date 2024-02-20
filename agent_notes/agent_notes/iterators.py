@@ -1,4 +1,4 @@
-from format import HEADER
+from .format import HEADER
 
 class AgentNotesIterator:
     def __init__(self, notes):
