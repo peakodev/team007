@@ -10,8 +10,18 @@ completer = NestedCompleter.from_nested_dict({
     'find': {'notes': None},
     'help': None,
     'exit': None,
-    'generate': None
+    'generate': None,
+    'return': None
 })
-
+completer_books = NestedCompleter.from_nested_dict({
+    'contact': None,
+    'change': {'contact': None},
+    'delete': None,
+    'target': None,
+    'all': {'targets': None},
+    'coming': {'targets': None},
+    'exit': None,
+    'return': None
+})
 # text = prompt('# ', completer=completer) # #just for test can be removed later
 # print('You said: %s' % text)   #  #just for test can be removed later

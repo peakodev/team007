@@ -4,22 +4,7 @@ from agent_book import (AgentBook, Record, PaginatedAgentBookIterator, Address, 
                         AgentBookIterator, ComingUpBirthdayAgentBookIterator)
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
-from completer import completer
-
-
-def show_help():
-    available_commands = {
-        'add note': "add new note , you can specify tags with #",
-        'show notes all': "display all notes",
-        'note add tag': 'add a tag to existing note by id',
-        'edit note': 'edit existing note by id',
-        'remove note': "remove existing note by id",
-        'find notes': 'find notes by any matches in text or id',
-        'exit': "for exit",
-        'help': "show help"
-    }
-    for key, description in available_commands.items():
-        print("{:<10} -> {}".format(key, description))
+from completer import completer, completer_books
 
 
 def singleton(class_):
@@ -33,12 +18,40 @@ def singleton(class_):
     return getinstance
 
 
+def show_help():
+    available_commands = {
+        'add note': "add new note , you can specify tags with #",
+        'show notes all': "display all notes",
+        'note add tag': 'add a tag to existing note by id',
+        'edit note': 'edit existing note by id',
+        'remove note': "remove existing note by id",
+        'find notes': 'find notes by any matches in text or id',
+        'exit': "for exit",
+        'help': "show help"
+    }
+    available_commands_book = {
+        'contact': 'Add a new contact',
+        'change contact': 'Change contact name',
+        'delete': 'remove contact by name',
+        'target': 'Find contact',
+        'all targets': 'List all contacts',
+        'coming targets': 'Show contact with birthday in next week or specified number of days'
+    }
+    if Bot().mode == '1':
+        for key, description in available_commands_book.items():
+            print("{:<20} -> {:>}".format(key, description))
+    if Bot().mode == '2':
+        for key, description in available_commands.items():
+            print("{:<20} -> {:>}".format(key, description))
+
+
 @singleton
 class Bot:
     def __init__(self):
         self.__isRunning = True
         self.__book = None
         self.__notes = None
+        self.__mode = None
         self.__commands = dict()
 
     @property
@@ -69,6 +82,14 @@ class Bot:
     def commands(self, commands: dict):
         self.__commands = commands
 
+    @property
+    def mode(self):
+        return self.__mode
+
+    @mode.setter
+    def mode(self, value):
+        self.__mode = value
+
     def iterate_book(self):
         for i, record in enumerate(AgentBookIterator(self.book)):
             # print(f'{i}: {record}')
@@ -79,6 +100,18 @@ class Bot:
         print(f'Targets in next {days} days:')
         for i, record in enumerate(ComingUpBirthdayAgentBookIterator(self.book, days)):
             print(f'{i}: {record}')
+
+    def change_mode(self):
+        print("Please select:\n")
+        print("1. Work with Contacts book")
+        print("2. Work with Notes")
+        print("3. Exit")
+        try:
+            mode = prompt('>>')
+            if mode in ['1', '2']:
+                self.mode = mode
+        except Exception as e:
+            print(e)
 
 
 def bot_exit():
@@ -121,20 +154,12 @@ def book_command_handler(command, input_string):
         return user_command()
 
 
-def change_mode() -> str:
-    print("Please select:\n")
-    print("1. Work with Contacts book")
-    print("2. Work with Notes")
-    return prompt('>>')
-
-
 def bot_start():
-    working_with = None
     bot = Bot()
     COMMANDS = {
         'help': show_help,
         'exit': bot_exit,
-        'return': None,
+        'return': bot.change_mode,
 
         'add note': bot.notes.add_note,
         'show notes all': bot.notes.show_all_notes,
@@ -151,34 +176,34 @@ def bot_start():
         'all targets': bot.iterate_book,
         'coming targets': bot.birthday_iterate_book
 
-
-
     }
     bot.commands = COMMANDS
 
-    working_with = change_mode()
+    bot.change_mode()
     while bot.running:
-        if working_with == '2':
+        if bot.mode == '2':  # Notes
             try:
-                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar, style=style,
-                                    rprompt=rprompt)
+                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar)
                 user_command, input_string = input_handler(str(user_input))
                 # print(len(input_string))
                 command_handler(user_command, input_string)
             except Exception as e:
                 print(e)
-        elif working_with == '1':
+        elif bot.mode == '1':  # Books
             try:
-                user_input = prompt(">>", )
+                user_input = prompt(">>", completer=completer_books)
                 user_command, input_string = input_handler(str(user_input))
-                print('You entered command:', user_command, "with such params", input_string)
+                #print('You entered command:', user_command, "with such params", input_string)
                 result = book_command_handler(user_command, input_string)
-                print(result)
+                if result:
+                    print(result)
 
             except Exception as e:
                 print(e)
+        elif bot.mode == '3':
+            bot_exit()
         else:
-            working_with = change_mode()
+            bot.change_mode()
 
 
 if __name__ == "__main__":
