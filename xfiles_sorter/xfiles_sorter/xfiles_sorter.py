@@ -38,7 +38,7 @@ def remove_empty_folders(folder_path):
 
 
 def organize_files(folder_path):
-    folders_to_ignore = ['archived intel', 'classified footage', 'covert audio', 'top-secret documentss', 'sensitive imager', 'miscellaneous classified data']
+    folders_to_ignore = ['archived intel', 'classified footage', 'covert audio', 'top-secret documents', 'sensitive imager', 'miscellaneous classified data']
     files_moved_count = {
         'sensitive imager': 0,
         'top-secret documents': 0,
