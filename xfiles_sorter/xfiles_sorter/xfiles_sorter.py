@@ -25,20 +25,39 @@ def normalize(file_name):
     return result + extension
 
 
+def normalize_files(file_names):
+    transliterated_count = 0
+    for file_name in file_names:
+        original_name = file_name
+        normalized_name = normalize(file_name)
+        if original_name != normalized_name:
+            try:
+                os.rename(original_name, normalized_name)
+                transliterated_count += 1
+            except OSError as e:
+                print(f"Ошибка при переименовании файла {original_name} в {normalized_name}: {e}")
+    print(f"Переименовано файлов: {transliterated_count}")
+    return transliterated_count
+    
+
 def remove_empty_folders(folder_path):
+    folder_removed = False
     for root, dirs, files in os.walk(folder_path, topdown=False):
         for directory in dirs:
             current_folder = os.path.join(root, directory)
             try:
                 os.rmdir(current_folder)
-                print(f"Folder purged of contents: {current_folder}")
+                print(f"Folder Purged of Contents: {current_folder}")
+                folder_removed = True
             except OSError as e:
                 # Error message printing removed to not display non-empty folder errors
                 pass
+    if not folder_removed:
+        print("No Confidential Folders Detected.")
 
 
 def organize_files(folder_path):
-    folders_to_ignore = ['archived intel', 'classified footage', 'covert audio', 'top-secret documentss', 'sensitive imager', 'miscellaneous classified data']
+    folders_to_ignore = ['archived intel', 'classified footage', 'covert audio', 'top-secret documents', 'sensitive imager', 'miscellaneous classified data']
     files_moved_count = {
         'sensitive imager': 0,
         'top-secret documents': 0,
