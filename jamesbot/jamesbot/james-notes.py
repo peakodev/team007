@@ -1,21 +1,10 @@
-from agent_notes import AgentNotes, generate_notes
-from agent_book import (AgentBook, Record, PaginatedAgentBookIterator, Address, DATE_FORMAT,
-                        AgentBookException, UKRAINIAN_REGIONS, CallSignNotFoundException,
-                        AgentBookIterator, ComingUpBirthdayAgentBookIterator)
+from agent_notes.test_notes import generate_notes
+from agent_notes import AgentNotes
+from agent_book import AgentBook, AgentBookIterator, ComingUpBirthdayAgentBookIterator
+from xfiles_sorter import organize_files
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer, completer_books
-
-
-def singleton(class_):
-    instances = {}
-
-    def getinstance(*args, **kwargs):
-        if class_ not in instances:
-            instances[class_] = class_(*args, **kwargs)
-        return instances[class_]
-
-    return getinstance
 
 
 def show_help():  # separated help command for different modes
@@ -37,12 +26,29 @@ def show_help():  # separated help command for different modes
         'all targets': 'List all contacts',
         'coming targets': 'Show contact with birthday in next week or specified number of days'
     }
+    available_commands_xfiles = {
+        'organize files': 'organize files',
+        'exit': "for exit",
+        'help': "show help"
+
+    }
     if Bot().mode == '1':
         for key, description in available_commands_book.items():
             print("{:<20} -> {:>}".format(key, description))
     if Bot().mode == '2':
         for key, description in available_commands.items():
             print("{:<20} -> {:>}".format(key, description))
+
+
+def singleton(class_):
+    instances = {}
+
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+
+    return getinstance
 
 
 @singleton
@@ -115,9 +121,9 @@ class Bot:
 
 
 def bot_exit():
-    print("Good bye")
+    print("Good bay")
     Bot().notes.serialize
-    Bot().book.serialize(Bot().book)
+    Bot().book.serialize
     Bot().running = False
 
 
@@ -135,7 +141,7 @@ def input_handler(input_string):
 def command_handler(command, input_string):
     user_command = Bot().commands.get(command)
     if input_string:
-        text, *tag = input_string.strip().split('#')
+        text, *tag = input_string.strip().split('--')
         ids = None
         if text.strip().split(' ', 1)[0].isdigit():
             ids, *text = text.strip().split(' ', 1)  # Does not pars tags for edit note
@@ -154,8 +160,36 @@ def book_command_handler(command, input_string):
         return user_command()
 
 
+# def get_agent_book():
+#     for record in AgentBookIterator(Bot().book):
+#         print(str(record))
+#
+#
+# def get_agent_book_birthday(days=1):
+#     for record in ComingUpBirthdayAgentBookIterator(Bot().book, after_days=days):
+#         print(str(record))
+
+
 def bot_start():
     bot = Bot()
+    # COMMANDS = {
+    #     'add agent': bot.book.add,
+    #     'remove agent': bot.book.delete,
+    #     'find agent': bot.book.find,
+    #     'find agent phones': bot.book.get_phones,
+    #     'show agents all': get_agent_book,
+    #     'show agents birthday': get_agent_book_birthday,
+    #     'add note': bot.notes.add_note,
+    #     'exit': bot_exit,
+    #     'show notes all': bot.notes.show_all_notes,
+    #     'note add tag': bot.notes.add_note_tag,
+    #     'edit note': bot.notes.edit_note,
+    #     'remove note': bot.notes.remove_note,
+    #     'find notes': bot.notes.find_notes,
+    #     'organize files': organize_files,
+    #     'help': show_help,
+    #     'generate notes': generate_notes
+    # }
     COMMANDS = {
         'help': show_help,
         'exit': bot_exit,
@@ -178,7 +212,6 @@ def bot_start():
 
     }
     bot.commands = COMMANDS
-
     bot.change_mode()  # Asking user to choose mode
     while bot.running:
         if bot.mode == '2':  # Notes loop
@@ -204,7 +237,6 @@ def bot_start():
             bot_exit()
         else:
             bot.change_mode()
-
 
 if __name__ == "__main__":
     bot_start()
