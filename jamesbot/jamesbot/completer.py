@@ -10,6 +10,7 @@ completer = NestedCompleter.from_nested_dict({
     'find': {'notes': None},
     'help': None,
     'exit': None,
+    'generate': None
 })
 
 # text = prompt('# ', completer=completer) # #just for test can be removed later
