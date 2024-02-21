@@ -1,17 +1,19 @@
 from agent_notes.test_notes import generate_notes
 from agent_notes import AgentNotes
-from agent_book import AgentBook
+from agent_book import AgentBook, AgentBookIterator, ComingUpBirthdayAgentBookIterator
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer
 
 
-# MyBook = AgentBook().deserialize()
-# MyBook.add("Orest")
-# print(MyBook.find_record("Orest"))
-
 def show_help():
     available_commands = {
+        'add agent': "Add an agent",
+        'remove agent': "Delete an agent",
+        'find agent':  "Find an agent",
+        'find agent phones': "Get all agent phones",
+        'show agents all': "Show all agents",
+        'show agents birthday': "Show all agents which birthday after X days",
         'add note': "add new note , you can specify tags with --",
         'show notes all': "display all notes",
         'note add tag': 'add a tag to existing note by id',
@@ -58,11 +60,11 @@ class Bot:
             self.__notes = AgentNotes().deserialize()
         return self.__notes
 
-    # # @property
-    # def book(self) -> AgentBook:
-    #     if self.__book is None:
-    #         self.__book = AgentBook().deserialize()
-    #     return self.__book
+    @property
+    def book(self) -> AgentBook:
+        if self.__book is None:
+            self.__book = AgentBook().deserialize()
+        return self.__book
 
     @property
     def commands(self) -> dict:
@@ -76,6 +78,7 @@ class Bot:
 def bot_exit():
     print("Good bay")
     Bot().notes.serialize
+    Bot().book.serialize
     Bot().running = False
 
 
@@ -104,9 +107,25 @@ def command_handler(command, input_string):
         user_command()
 
 
+def get_agent_book():
+    for record in AgentBookIterator(Bot().book):
+        print(str(record))
+
+
+def get_agent_book_birthday(days=1):
+    for record in ComingUpBirthdayAgentBookIterator(Bot().book, after_days=days):
+        print(str(record))
+
+
 def bot_start():
     bot = Bot()
     COMMANDS = {
+        'add agent': bot.book.add,
+        'remove agent': bot.book.delete,
+        'find agent': bot.book.find,
+        'find agent phones': bot.book.get_phones,
+        'show agents all': get_agent_book,
+        'show agents birthday': get_agent_book_birthday,
         'add note': bot.notes.add_note,
         'exit': bot_exit,
         'show notes all': bot.notes.show_all_notes,
