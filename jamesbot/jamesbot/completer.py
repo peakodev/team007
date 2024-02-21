@@ -1,7 +1,6 @@
-# from prompt_toolkit import prompt   #just for test can be removed later
 from prompt_toolkit.completion import NestedCompleter
 
-completer = NestedCompleter.from_nested_dict({
+completer = NestedCompleter.from_nested_dict({  # autocompleter for Notes mode
     'show': {'notes': {'all': None}},
     'note': {'add': None},
     'add': {'note': None},
@@ -13,7 +12,7 @@ completer = NestedCompleter.from_nested_dict({
     'generate': None,
     'return': None
 })
-completer_books = NestedCompleter.from_nested_dict({
+completer_books = NestedCompleter.from_nested_dict({  # autocompleter for Contacts books mode
     'contact': None,
     'change': {'contact': None},
     'delete': None,
@@ -23,5 +22,3 @@ completer_books = NestedCompleter.from_nested_dict({
     'exit': None,
     'return': None
 })
-# text = prompt('# ', completer=completer) # #just for test can be removed later
-# print('You said: %s' % text)   #  #just for test can be removed later

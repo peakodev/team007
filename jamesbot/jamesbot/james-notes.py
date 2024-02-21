@@ -18,7 +18,7 @@ def singleton(class_):
     return getinstance
 
 
-def show_help():
+def show_help():  # separated help command for different modes
     available_commands = {
         'add note': "add new note , you can specify tags with #",
         'show notes all': "display all notes",
@@ -179,21 +179,21 @@ def bot_start():
     }
     bot.commands = COMMANDS
 
-    bot.change_mode()
+    bot.change_mode()  # Asking user to choose mode
     while bot.running:
-        if bot.mode == '2':  # Notes
+        if bot.mode == '2':  # Notes loop
             try:
-                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar)
+                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar)  # Removed right toolbar
                 user_command, input_string = input_handler(str(user_input))
                 # print(len(input_string))
                 command_handler(user_command, input_string)
             except Exception as e:
                 print(e)
-        elif bot.mode == '1':  # Books
+        elif bot.mode == '1':  # Books loop
             try:
                 user_input = prompt(">>", completer=completer_books)
                 user_command, input_string = input_handler(str(user_input))
-                #print('You entered command:', user_command, "with such params", input_string)
+                # print('You entered command:', user_command, "with such params", input_string)
                 result = book_command_handler(user_command, input_string)
                 if result:
                     print(result)
