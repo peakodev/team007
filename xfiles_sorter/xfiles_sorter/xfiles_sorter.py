@@ -18,23 +18,48 @@ def normalize(file_name):
     result = ''
     base_name, extension = os.path.splitext(file_name)
     for char in base_name:
-        if char.isspace():
-            result += '_'
-        else:
-            result += translit_table.get(char, char)
+        result += translit_table.get(char, char) if char not in ['/', '\\'] else char
     return result + extension
 
 
+# def normalize_files(file_names):
+#     transliterated_count = 0
+#     for file_name in file_names:
+#         original_path = os.path.abspath(file_name)
+#         directory = os.path.dirname(original_path)
+#         normalized_name = normalize(os.path.basename(file_name))
+#         new_path = os.path.join(directory, normalized_name)
+
+#         if original_path != new_path:
+#             if not os.path.exists(new_path):
+#                 try:
+#                     os.rename(original_path, new_path)
+#                     transliterated_count += 1
+#                 except OSError as e:
+#                     print(f"Ошибка при переименовании файла {original_path} в {new_path}: {e}")
+#             else:
+#                 print(f"Файл с именем {new_path} уже существует.")
+#         else:
+#             print(f"Имя файла {original_path} не требует изменений.")
+
+#     print(f"Переименовано файлов: {transliterated_count}")
+#     return transliterated_count
+    
+
 def remove_empty_folders(folder_path):
+    folder_removed = False
     for root, dirs, files in os.walk(folder_path, topdown=False):
         for directory in dirs:
             current_folder = os.path.join(root, directory)
             try:
                 os.rmdir(current_folder)
-                print(f"Folder purged of contents: {current_folder}")
+                print(f"Folder Purged of Contents: {current_folder}")
+                folder_removed = True
             except OSError as e:
                 # Error message printing removed to not display non-empty folder errors
                 pass
+    if not folder_removed:
+        print("No Confidential Folders Detected.")
 
 
 def organize_files(folder_path):
