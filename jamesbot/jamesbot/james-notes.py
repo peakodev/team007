@@ -121,7 +121,7 @@ class Bot:
 
 
 def bot_exit():
-    print("Good bay")
+    print("Good bye")
     Bot().notes.serialize
     Bot().book.serialize
     Bot().running = False
