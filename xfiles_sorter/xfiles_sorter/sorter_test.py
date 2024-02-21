@@ -1,7 +1,7 @@
 import os
 import shutil
 import zipfile
-from xfiles_sorter import organize_files, remove_empty_folders, normalize_files, normalize
+from xfiles_sorter import organize_files, remove_empty_folders
 
 
 def handle_command(command):
@@ -12,11 +12,11 @@ def handle_command(command):
     elif command == "remove":
         folder_path = input("Введите путь к папке для очистки: ")
         remove_empty_folders(folder_path)
-    elif command == "normalize":
-        folder_path = input("Введите путь к папке для розшифроки: ")
-        normalize_files(folder_path)
+    # elif command == "normalize":
+    #     folder_path = input("Введите путь к папке для розшифроки: ")
+    #     normalize_files(folder_path)
     elif command == "help":
-        print("Доступные команды:\norganize - организовать файлы в указанной папке\nexit - выйти из программы\nremove - remove folder\nnormalize - translate")
+        print("Доступные команды:\norganize - организовать файлы в указанной папке\nexit - выйти из программы\nremove - remove folder") #\nnormalize - translate
     elif command == "exit":
         print("Выход из программы...")
         exit()
