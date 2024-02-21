@@ -18,26 +18,32 @@ def normalize(file_name):
     result = ''
     base_name, extension = os.path.splitext(file_name)
     for char in base_name:
-        if char.isspace():
-            result += '_'
-        else:
-            result += translit_table.get(char, char)
+        result += translit_table.get(char, char) if char not in ['/', '\\'] else char
     return result + extension
 
 
-def normalize_files(file_names):
-    transliterated_count = 0
-    for file_name in file_names:
-        original_name = file_name
-        normalized_name = normalize(file_name)
-        if original_name != normalized_name:
-            try:
-                os.rename(original_name, normalized_name)
-                transliterated_count += 1
-            except OSError as e:
-                print(f"Ошибка при переименовании файла {original_name} в {normalized_name}: {e}")
-    print(f"Переименовано файлов: {transliterated_count}")
-    return transliterated_count
+# def normalize_files(file_names):
+#     transliterated_count = 0
+#     for file_name in file_names:
+#         original_path = os.path.abspath(file_name)
+#         directory = os.path.dirname(original_path)
+#         normalized_name = normalize(os.path.basename(file_name))
+#         new_path = os.path.join(directory, normalized_name)
+
+#         if original_path != new_path:
+#             if not os.path.exists(new_path):
+#                 try:
+#                     os.rename(original_path, new_path)
+#                     transliterated_count += 1
+#                 except OSError as e:
+#                     print(f"Ошибка при переименовании файла {original_path} в {new_path}: {e}")
+#             else:
+#                 print(f"Файл с именем {new_path} уже существует.")
+#         else:
+#             print(f"Имя файла {original_path} не требует изменений.")
+
+#     print(f"Переименовано файлов: {transliterated_count}")
+#     return transliterated_count
     
 
 def remove_empty_folders(folder_path):
