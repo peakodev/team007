@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-agent_book = {file = "."}
 faker = "*"
 setuptools = "*"
+agent-book = {file = "."}
 
 [dev-packages]
 

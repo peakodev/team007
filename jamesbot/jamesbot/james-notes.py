@@ -1,7 +1,6 @@
 from agent_notes.test_notes import generate_notes
 from agent_notes import AgentNotes
-from agent_book import AgentBook, AgentBookIterator, ComingUpBirthdayAgentBookIterator
-from xfiles_sorter import organize_files
+from agent_book import AgentBook
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer, completer_books
