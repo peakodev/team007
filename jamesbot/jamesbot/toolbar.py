@@ -8,7 +8,7 @@ style = Style.from_dict({
 
 def rprompt():
     return """Total Contacts: 0 
-              Total Notes 0"""
+              Total Notes: 0"""
 
 
 def bottom_toolbar():
