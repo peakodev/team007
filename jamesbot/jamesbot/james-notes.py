@@ -1,6 +1,7 @@
 from agent_notes.test_notes import generate_notes
 from agent_notes import AgentNotes
 from agent_book import AgentBook, AgentBookIterator, ComingUpBirthdayAgentBookIterator
+from xfiles_sorter import organize_files
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer
@@ -20,6 +21,7 @@ def show_help():
         'edit note': 'edit existing note by id',
         'remove note': "remove existing note by id",
         'find notes': 'find notes by any matches in text or id',
+        'organize files': 'organize files',
         'exit': "for exit",
         'help': "show help"
     }
@@ -133,6 +135,7 @@ def bot_start():
         'edit note': bot.notes.edit_note,
         'remove note': bot.notes.remove_note,
         'find notes': bot.notes.find_notes,
+        'organize files': organize_files,
         'help': show_help,
         'generate notes': generate_notes
     }

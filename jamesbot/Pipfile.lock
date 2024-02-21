@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "64f71dd13cc4fbc7fb1ae63f2af9397fc4cd50147a3ded498e8fbd377ccd2127"
+            "sha256": "aa13b63ffa0c5c0823da63929fad585d9cb8bcea5ad0ba2ff0fda0d804682a82"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -39,6 +39,10 @@
                 "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"
             ],
             "version": "==0.2.13"
+        },
+        "xfiles-sorter": {
+            "editable": true,
+            "path": "../xfiles_sorter/"
         }
     },
     "develop": {}

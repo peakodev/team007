@@ -9,6 +9,7 @@ completer = NestedCompleter.from_nested_dict({
     'edit': {'note': None, 'agent': {'call-sign': None}},
     'remove': {'note': None, 'agent': None},
     'find': {'notes': None, 'agent': {'phones': None}},
+    'organize': {'files': None},
     'help': None,
     'exit': None,
 })
