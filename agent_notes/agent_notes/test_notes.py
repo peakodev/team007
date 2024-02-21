@@ -1,8 +1,9 @@
-#import sys
-#sys.path.insert(1,'C:\\Work\\team007\\team007\\agent_notes')
+# import sys
+# sys.path.insert(1,'C:\\Work\\team007\\team007\\agent_notes')
 
 from .entities import AgentNotes
 from .iterators import PaginatedAgentNotesIterator
+
 
 # notes1 = AgentNotes()
 
@@ -49,14 +50,17 @@ from .iterators import PaginatedAgentNotesIterator
 
 def generate_notes():
     notes = AgentNotes()
-    notes.add_note('Ненавижу чай. Это же просто грязная жижа. Больше того, чай — одна из главных причин падения Британской империи.', 'чай', 'причина')
+    notes.add_note(
+        'Ненавижу чай. Это же просто грязная жижа. Больше того, чай — одна из главных причин падения Британской империи.',
+        'чай', 'причина')
     notes.add_note('Я обычно замечаю всякие мелочи — например, блондинка девушка или брюнетка.', 'мелочи', 'блондинка')
     notes.add_note('Почему люди, которые не слушают чужих советов, так любят давать собственные?', 'советы', 'люди')
     notes.add_note('Власть меняется — ложь остается.', 'власть', 'ложь')
     notes.add_note('Ради женщины с ножом я готов на все.', 'женщина', 'нож')
 
+
 def test_output():
-    notes  = AgentNotes().deserialize()
+    notes = AgentNotes().deserialize()
     print('\nshow deserialized notes')
     notes.show_all_notes()
 
@@ -81,15 +85,12 @@ def test_output():
     notes.show_all_notes()
 
     print('\nprint 2 items per page:')
-    for pages in PaginatedAgentNotesIterator(notes,2):
+    for pages in PaginatedAgentNotesIterator(notes, 2):
         for item in pages:
             print(item)
 
     print('\nfind note by tag "девушка"')
     notes.find_notes('девушка')
-
-
-
 
 # bot.notes.commands = {
 #     'show_all_notes': bot.notes.show_all_notes, # show all notes
