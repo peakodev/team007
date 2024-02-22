@@ -14,11 +14,11 @@ from prompt_toolkit.completion import NestedCompleter
 # })
 completer = NestedCompleter.from_nested_dict({  # autocompleter for Notes mode
     'show_note_all': None,
-    'add_note': None,
+    'new_note': None,
     'edit_note': None,
     'remove_note': None,
-    'find_notes': None,
-    'add_tag':None,
+    'notes_find': None,
+    'tag_add':None,
     'help': None,
     'exit': None,
     'generate': None,
@@ -39,6 +39,8 @@ completer_books = NestedCompleter.from_nested_dict({  # autocompleter for Contac
     'bday': {'Вкажіть "ім''я користувача" ': None},
     'find': {'Вкажіть декілька (не меньше 3-х) літер із імені або цифр із номера телефону ': None},
     'help': {'Щоб отримати довідку про команди, натисніть Enter': None},
+    'contact_address': {'Вкажіть імя користувача, країну, регіон, потштовий індекс (ZIP), місто та вулицю':None},
+    'exit': None
 })
 completer_files = NestedCompleter.from_nested_dict({  # autocompleter for Contacts books mode
     'organize_files': None,

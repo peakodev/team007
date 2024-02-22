@@ -1,6 +1,6 @@
 import pickle
 from collections import UserDict
-
+from pathlib import Path
 from ..fs import datadir
 from .record import Record
 from .book_fields import Phone
@@ -9,7 +9,7 @@ from ..exceptions import TooSmallQueryException, CallSignNotFoundException, Call
 
 
 class AgentBook(UserDict):
-    dump_file_name = datadir() / 'agent_book.bin'
+    dump_file_name = Path(__file__).parent / 'book.pkl'
 
     @staticmethod
     def serialize(obj):
