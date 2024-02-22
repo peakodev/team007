@@ -55,7 +55,7 @@ def show_help():  # separated help command for different modes
 def bot_exit():
     print("Good bye")
     Bot().notes.serialize
-    Bot().book.serialize
+    Bot().book.serialize(book)
     Bot().running = False
 
 
@@ -117,6 +117,7 @@ def change_phone(param, record):
     return 'Користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
         ' телефонний номер ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET + \
         ' замінено на ' + Fore.LIGHTBLUE_EX + f' {param[2]} ' + Fore.RESET
+
 
 @check_param(6)
 def add_address(param, record):
@@ -241,14 +242,14 @@ def bot_start():
         'email': add_email,
         'bday': next_birthday,
         'find': find_users,
-        'add_address': add_address,
+        'contact_address': add_address,
 
-        'add_note': bot.notes.add_note,
+        'new_note': bot.notes.add_note,
         'show_note_all': bot.notes.show_all_notes,
-        'add_tag': bot.notes.add_note_tag,
+        'tag_add': bot.notes.add_note_tag,
         'edit_note': bot.notes.edit_note,
         'remove_note': bot.notes.remove_note,
-        'find_notes': bot.notes.find_notes,
+        'notes_find': bot.notes.find_notes,
 
         'organize_files': organize_files
 

@@ -66,7 +66,7 @@ class Region(CountryBasedField):
     }
 
     def _validate(self, value):
-        if not (isinstance(value, str) and 3 <= len(value) <= 50):
+        if value not in self._REGIONS.get(self._country_enum):
             raise WrongRegionStateException(country_enum=self._country_enum)
 
 
