@@ -8,6 +8,7 @@ agent_book = {path = '../agent_book/', editable = true}
 agent_notes = {path = '../agent_notes/', editable = true}
 xfiles_sorter = {path = '../xfiles_sorter/', editable = true}
 prompt-toolkit = "*"
+colorama = "*"
 
 [dev-packages]
 
