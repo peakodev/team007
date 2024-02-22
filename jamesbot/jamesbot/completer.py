@@ -26,12 +26,18 @@ completer = NestedCompleter.from_nested_dict({  # autocompleter for Notes mode
     'return': None
 })
 completer_books = NestedCompleter.from_nested_dict({  # autocompleter for Contacts books mode
-    'add': None,
-    'change': {'contact': None},
-    'delete': None,
-    'target': None,
-    'all': {'targets': None},
-    'coming': {'targets': None},
+    'add': None,  # 22.02.24
+    'usr_del': None,
+    'phone_add': None,
+    'del_phone': None,
+    'get_phone': None,
+    'upd_phone': None,
+    'show_all': None,
+    'user_del': None,
+    'birthday': None,
+    'email': None,
+    'bday': None,
+    'find': None,
     'exit': None,
     'return': None
 })

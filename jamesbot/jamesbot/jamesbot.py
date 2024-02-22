@@ -4,7 +4,11 @@ from xfiles_sorter import organize_files
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer, completer_books, completer_files
+from colorama import init
 
+from colorama import Fore, Back, Style
+init()
+book = Bot().book
 
 def show_help():  # separated help command for different modes
     available_commands_notes = {
@@ -52,6 +56,130 @@ def bot_exit():
     Bot().running = False
 
 
+'''---------------- 22.02.24 -----------------'''
+
+
+def check_param(num_of_param, plus='+'):
+    def check(func):
+        if num_of_param >= 10:
+            beg = num_of_param // 10
+            end = num_of_param % 10
+        else:
+            beg = num_of_param
+            end = beg
+
+        def wrapper(*arg):
+            param = tuple(filter(lambda x: x, ' '.join(arg).split(' ')))
+            if len(param) < beg or len(param) > end:
+                raise ValueError(Fore.LIGHTRED_EX + 'Помилка у кількості параметрів ' + Fore.LIGHTBLUE_EX + \
+                                 f'Очікувалося {beg} отримано {len(param)}')
+
+            record = None
+            if plus == '+':
+                record = book.find_record(param[0])
+                if record == None:
+                    raise ValueError('Користувач ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RED + \
+                                     "відсутній в телефонній книзі")
+
+            return func(param, record)
+
+        return wrapper
+
+    return check
+
+
+@check_param(24, '-')
+def add_user(param, empty):
+    name_user = param[0]
+    num_phone = param[1]
+    if len(param) == 3:
+        birthday = param[2].replace('.', '-')
+    else:
+        birthday = None
+
+    book.add(name_user, num_phone, birthday)
+    return 'Користувач ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + ' додан до телефонної книги'
+
+
+@check_param(1)
+def del_user(param, empty):
+    book.delete(param[0])
+    return 'Користувач ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
+        ' вилучен з телефонної книги '
+
+
+@check_param(3)
+def change_phone(param, record):
+    record.edit_phone(param[1], param[2])
+    return 'Користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
+        ' телефонний номер ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET + \
+        ' замінено на ' + Fore.LIGHTBLUE_EX + f' {param[2]} ' + Fore.RESET
+
+
+@check_param(2)
+def add_phone(param, record):
+    record.add_phone(param[1])
+    return f'Телефонний номер ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET + \
+        ' доданий користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET
+
+
+@check_param(2)
+def del_phone(param, record):
+    record.remove_phone(param[1])
+    return f'Телефонний номер ' + Fore.LIGHTBLUE_EX + f'{param[1]}' + Fore.RESET + \
+        ' вилучено у користувача ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET
+
+
+@check_param(2)
+def add_birthday(param, record):
+    book.add_birthday(param[0], param[1].replace('.', '-'))
+    return 'Користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
+        ' встановлено день народження ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET
+
+
+@check_param(2)
+def add_email(param, record):
+    book.add_email(param[0], param[1].replace('.', '-'))
+    return 'Користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
+        ' встановлено Emall ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET
+
+
+@check_param(1)
+def next_birthday(param, record):
+    next_day = record.days_to_birthday()
+    return 'У користувача ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
+        ' день народження через ' + Fore.LIGHTBLUE_EX + f' {next_day} днів' + Fore.RESET
+
+
+@check_param(1, '-')
+def find_users(param, record):
+    list_user = book.find(param[0])
+    if len(list_user) == 0:
+        return Fore.LIGHTYELLOW_EX + 'Користувачів із зазначеними параметрами не знайдено'
+
+    print(Fore.LIGHTWHITE_EX + Style.BRIGHT + '\n\n')
+    for name_user in list_user:
+        print(name_user)
+    print(Fore.RESET + Style.RESET_ALL + '\n')
+
+
+'''----- Не доработано ----------------------------------------------------------------'''
+
+
+def show_all():
+    ''' Друк інформації про всіх користувачів'''
+    pass
+
+
+@check_param(1)
+def find_phone(param, record):
+    phone = record.find_phone(param[0])  # Не понятна работа !!!!!!!!!!!
+    return phone
+
+
+'''-------------------------------------------------------------------------------------'''
+
+
 def input_handler(input_string):
     # separated = input_string.split()
     entered_command = ''
@@ -86,43 +214,31 @@ def book_command_handler(command, input_string):
 
 def bot_start():
     bot = Bot()
-    # COMMANDS = {
-    #     'add agent': bot.book.add,
-    #     'remove agent': bot.book.delete,
-    #     'find agent': bot.book.find,
-    #     'find agent phones': bot.book.get_phones,
-    #     'show agents all': get_agent_book,
-    #     'show agents birthday': get_agent_book_birthday,
-    #     'add note': bot.notes.add_note,
-    #     'exit': bot_exit,
-    #     'show notes all': bot.notes.show_all_notes,
-    #     'note add tag': bot.notes.add_note_tag,
-    #     'edit note': bot.notes.edit_note,
-    #     'remove note': bot.notes.remove_note,
-    #     'find notes': bot.notes.find_notes,
-    #     'organize files': organize_files,
-    #     'help': show_help,
-    #     'generate notes': generate_notes
-    # }
     COMMANDS = {
         'help': show_help,
         'exit': bot_exit,
         'return': bot.change_mode,
 
+        'add': add_user,  # 22.02.24
+        'usr_del': del_user,
+        'phone_add': add_phone,
+        'del_phone': del_phone,
+        'get_phone': find_phone,
+        'upd_phone': change_phone,
+        'show_all': bot.iterate_book,
+        'user_del': del_user,
+        'birthday': add_birthday,
+        'email': add_email,
+        'bday': next_birthday,
+        'find': find_users,
+
         'add_note': bot.notes.add_note,
-        'show_all': bot.notes.show_all_notes,
+        'show_all_note': bot.notes.show_all_notes,
         'add_tag': bot.notes.add_note_tag,
         'edit_note': bot.notes.edit_note,
         'remove_note': bot.notes.remove_note,
         'find_notes': bot.notes.find_notes,
         'generate notes': generate_notes,
-
-        'add': bot.book.add,
-        'change contact': bot.book.change_call_sign,
-        'delete': bot.book.delete,
-        'target': bot.book.find_record,
-        'all targets': bot.iterate_book,
-        'coming targets': bot.birthday_iterate_book,
 
         'organize_files': organize_files
 
