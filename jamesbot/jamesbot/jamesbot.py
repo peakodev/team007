@@ -1,14 +1,16 @@
-from agent_notes.test_notes import generate_notes
-from bot_class import Bot
+from .bot_class import Bot
 from xfiles_sorter import organize_files
 from prompt_toolkit import prompt
-from toolbar import style, bottom_toolbar, rprompt
-from completer import completer, completer_books, completer_files
+from .toolbar import style, bottom_toolbar, rprompt
+from .completer import completer, completer_books, completer_files
 from colorama import init
+from agent_book import Address
 
 from colorama import Fore, Back, Style
+
 init()
 book = Bot().book
+
 
 def show_help():  # separated help command for different modes
     available_commands_notes = {
@@ -29,6 +31,7 @@ def show_help():  # separated help command for different modes
         'target': 'Find contact',
         'all targets': 'List all contacts',
         'coming targets': 'Show contact with birthday in next week or specified number of days',
+        'address': 'Add address',
         'return': 'returns you to previous menu'
     }
     available_commands_xfiles = {
@@ -115,6 +118,12 @@ def change_phone(param, record):
         ' телефонний номер ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET + \
         ' замінено на ' + Fore.LIGHTBLUE_EX + f' {param[2]} ' + Fore.RESET
 
+@check_param(6)
+def add_address(param, record):
+    record.address = Address(country=param[1], region=param[2], city=param[3], zip_code=param[4], address_line=param[5])
+    return 'Користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
+        ' додана адреса ' + Fore.LIGHTBLUE_EX + f' {str(record.address)} ' + Fore.RESET
+
 
 @check_param(2)
 def add_phone(param, record):
@@ -140,8 +149,9 @@ def add_birthday(param, record):
 @check_param(2)
 def add_email(param, record):
     book.add_email(param[0], param[1])
-    return 'Користувачеві '+Fore.LIGHTBLUE_EX+f' {param[0]} '+Fore.RESET+\
-           ' встановлено Emall '+Fore.LIGHTBLUE_EX+f' {param[1]} '+Fore.RESET
+    return 'Користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
+        ' встановлено Emall ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET
+
 
 @check_param(1)
 def next_birthday(param, record):
@@ -231,6 +241,7 @@ def bot_start():
         'email': add_email,
         'bday': next_birthday,
         'find': find_users,
+        'add_address': add_address,
 
         'add_note': bot.notes.add_note,
         'show_note_all': bot.notes.show_all_notes,
@@ -238,7 +249,6 @@ def bot_start():
         'edit_note': bot.notes.edit_note,
         'remove_note': bot.notes.remove_note,
         'find_notes': bot.notes.find_notes,
-        'generate notes': generate_notes,
 
         'organize_files': organize_files
 
