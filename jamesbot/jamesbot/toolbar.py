@@ -1,8 +1,13 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
+from bot_class import Bot
 
 style = Style.from_dict({
-    'rprompt': 'bg:#ff0066 #ffffff',
+    # 'rprompt': 'bg:#ff0066 #ffffff',
+
+    "bottom-toolbar.text": "#000000 bg:#ff00ff",
+    "completion-menu.completion.current": "bg:#00aaaa #000000",
+    "completion-menu.completion": "bg:#008888 #ffffff"
 })
 
 
@@ -12,7 +17,9 @@ def rprompt():
 
 
 def bottom_toolbar():
-    return f"Total Contacts:  Total Notes:  "
+    Ccounter = len(Bot().notes)
+    Bcounter = len(Bot().book)
+    if Ccounter is not None:
+        return f"Total Contacts:{Bcounter}  Total Notes:{Ccounter} "
 
-# text = prompt('> ', bottom_toolbar=bottom_toolbar)
-# print('You said: %s' % text)
+

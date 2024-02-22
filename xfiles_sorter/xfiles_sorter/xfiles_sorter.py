@@ -1,7 +1,6 @@
 import os
 import shutil
 import zipfile
-import logging
 
 
 def normalize(file_name):
@@ -23,6 +22,30 @@ def normalize(file_name):
     return result + extension
 
 
+# def normalize_files(file_names):
+#     transliterated_count = 0
+#     for file_name in file_names:
+#         original_path = os.path.abspath(file_name)
+#         directory = os.path.dirname(original_path)
+#         normalized_name = normalize(os.path.basename(file_name))
+#         new_path = os.path.join(directory, normalized_name)
+
+#         if original_path != new_path:
+#             if not os.path.exists(new_path):
+#                 try:
+#                     os.rename(original_path, new_path)
+#                     transliterated_count += 1
+#                 except OSError as e:
+#                     print(f"Ошибка при переименовании файла {original_path} в {new_path}: {e}")
+#             else:
+#                 print(f"Файл с именем {new_path} уже существует.")
+#         else:
+#             print(f"Имя файла {original_path} не требует изменений.")
+
+#     print(f"Переименовано файлов: {transliterated_count}")
+#     return transliterated_count
+    
+
 def remove_empty_folders(folder_path):
     folder_removed = False
     for root, dirs, files in os.walk(folder_path, topdown=False):
@@ -39,61 +62,62 @@ def remove_empty_folders(folder_path):
         print("No Confidential Folders Detected.")
 
 
-def organize_files(folder_path, target_folder_path):
-    logging.basicConfig(filename='organize_files.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
-    if not target_folder_path:
-        target_folder_path = folder_path
-    
+def organize_files(folder_path):
     folders_to_ignore = ['archived intel', 'classified footage', 'covert audio', 'top-secret documents', 'sensitive imager', 'miscellaneous classified data']
-    files_moved_count = {category: 0 for category in folders_to_ignore}
+    files_moved_count = {
+        'sensitive imager': 0,
+        'top-secret documents': 0,
+        'covert audio': 0,
+        'classified footage': 0,
+        'archived intel': 0,
+        'miscellaneous classified data': 0
+    }
 
     for folder in folders_to_ignore:
-        target_path = os.path.join(target_folder_path, folder)
-        if not os.path.exists(target_path):
-            os.makedirs(target_path)
+        if not os.path.exists(os.path.join(folder_path, folder)):
+            os.makedirs(os.path.join(folder_path, folder))
 
-    for root, dirs, files in os.walk(folder_path, topdown=True):
-        dirs[:] = [d for d in dirs if d not in folders_to_ignore]  # Игнорировать заданные папки при обходе
+    for root, _, files in os.walk(folder_path):
         for file_name in files:
             file_path = os.path.join(root, file_name)
-            if file_name.startswith('.') or os.path.isdir(file_path):
-                continue
-            normalized_name = normalize(file_name)
-            file_extension = os.path.splitext(file_name)[1][1:].lower()
-            try:
-                if file_extension in ['jpeg', 'png', 'jpg', 'svg']:
-                    target = 'sensitive imager'
-                elif file_extension in ['doc', 'docx', 'txt', 'pdf', 'xlsx', 'pptx']:
-                    target = 'top-secret documents'
-                elif file_extension in ['mp3', 'ogg', 'wav', 'amr']:
-                    target = 'covert audio'
-                elif file_extension in ['avi', 'mp4', 'mov', 'mkv']:
-                    target = 'classified footage'
-                elif file_extension in ['zip', 'gz', 'tar']:
-                    archive_target_folder = os.path.join(target_folder_path, 'archived intel', normalized_name.replace('.' + file_extension, ''))
-                    if not os.path.exists(archive_target_folder):
-                        os.makedirs(archive_target_folder)
-                    if os.path.exists(file_path):
-                        try:
-                            with zipfile.ZipFile(file_path, 'r') as zip_ref:
-                                zip_ref.extractall(archive_target_folder)
-                            os.remove(file_path)
-                            files_moved_count['archived intel'] += 1
-                        except zipfile.BadZipFile:
-                            logging.error(f"Ошибка: файл {file_path} поврежден и не может быть распакован.")
-                            os.remove(file_path)
-                        except Exception as e:
-                            logging.error(f"Ошибка при обработке архива {file_path}: {e}")
-                else:
-                    target = 'miscellaneous classified data'
-                
-                if target:
-                    shutil.move(file_path, os.path.join(target_folder_path, target, normalized_name))
-                    files_moved_count[target] += 1
-            except Exception as e:
-                logging.error(f"Ошибка при перемещении файла {file_path} в '{target_folder_path}': {e}")
 
-    logging.info(f"Файлы перемещены: {files_moved_count}")
+            if any(folder in file_path.split(os.path.sep) for folder in folders_to_ignore):
+                continue
+
+            if file_name.startswith('.') or os.path.isdir(file_path) or file_name in folders_to_ignore:
+                continue
+
+            normalized_name = normalize(file_name)
+
+            file_extension = os.path.splitext(file_name)[1][1:].lower()
+
+            if file_extension in ['jpeg', 'png', 'jpg', 'svg']:
+                shutil.move(file_path, os.path.join(folder_path, 'sensitive imager', normalized_name))
+                files_moved_count['sensitive imager'] += 1
+            elif file_extension in ['doc', 'docx', 'txt', 'pdf', 'xlsx', 'pptx']:
+                shutil.move(file_path, os.path.join(folder_path, 'top-secret documents', normalized_name))
+                files_moved_count['top-secret documents'] += 1
+            elif file_extension in ['mp3', 'ogg', 'wav', 'amr']:
+                shutil.move(file_path, os.path.join(folder_path, 'covert audio', normalized_name))
+                files_moved_count['covert audio'] += 1
+            elif file_extension in ['avi', 'mp4', 'mov', 'mkv']:
+                shutil.move(file_path, os.path.join(folder_path, 'classified footage', normalized_name))
+                files_moved_count['classified footage'] += 1
+            elif file_extension in ['zip', 'gz', 'tar']:
+                try:
+                    if os.path.exists(file_path):
+                        with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                            zip_ref.extractall(os.path.join(folder_path, 'archived intel', normalized_name))
+                        os.remove(file_path)
+                        files_moved_count['archived intel'] += 1
+                        continue
+                    else:
+                        print(f"Classified Document Unavailable: {file_path}")
+                except zipfile.BadZipFile:
+                    os.remove(file_path)
+            else:
+                shutil.move(file_path, os.path.join(folder_path, 'miscellaneous classified data', normalized_name))
+                files_moved_count['miscellaneous classified data'] += 1
 
     remove_empty_folders(folder_path)
     print("Secure Directory Organization Complete.")

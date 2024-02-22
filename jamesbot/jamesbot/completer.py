@@ -12,26 +12,19 @@ from prompt_toolkit.completion import NestedCompleter
 #     'help': None,
 #     'exit': None,
 # })
-
 completer = NestedCompleter.from_nested_dict({  # autocompleter for Notes mode
-    'show': {'notes': {'all': None}},
-    'note': {'add': None},
-    'add': {'note': None},
-    'edit': {'note': None},
-    'remove': {'note': None},
-    'find': {'notes': None},
+    'show_note_all': None,
+    'add_note': None,
+    'edit_note': None,
+    'remove_note': None,
+    'find_notes': None,
+    'add_tag':None,
     'help': None,
     'exit': None,
     'generate': None,
     'return': None
 })
 completer_books = NestedCompleter.from_nested_dict({  # autocompleter for Contacts books mode
-    'contact': None,
-    'change': {'contact': None},
-    'delete': None,
-    'target': None,
-    'all': {'targets': None},
-    
     'add': {'Вкажіть ім''я користувача телефон та (не обов''язково) Email та дату народження': None},
     'usr_del': {'Вкажіть "ім''я користувача" (для вилучення)': None},
     'phone_add': {'Вкажіть "ім''я користувача" та номер телефону (для додавання)': None},
@@ -45,8 +38,10 @@ completer_books = NestedCompleter.from_nested_dict({  # autocompleter for Contac
     'bday': {'Вкажіть "ім''я користувача" ': None},
     'find': {'Вкажіть декілька (не меньше 3-х) літер із імені або цифр із номера телефону ': None},
     'help': {'Щоб отримати довідку про команди, натисніть Enter': None},
-    
-    'coming': {'targets': None},
+})
+completer_files = NestedCompleter.from_nested_dict({  # autocompleter for Contacts books mode
+    'organize_files': None,
     'exit': None,
+    'help': None,
     'return': None
 })
