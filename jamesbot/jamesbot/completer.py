@@ -12,7 +12,6 @@ from prompt_toolkit.completion import NestedCompleter
 #     'help': None,
 #     'exit': None,
 # })
-
 completer = NestedCompleter.from_nested_dict({  # autocompleter for Notes mode
     'show_note_all': None,
     'add_note': None,
