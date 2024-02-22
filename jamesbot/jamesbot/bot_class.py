@@ -1,4 +1,4 @@
-from agent_notes import AgentNotes
+from agent_notes import AgentNotes, SEPARATOR
 from agent_book import AgentBook, AgentBookIterator, ComingUpBirthdayAgentBookIterator
 from prompt_toolkit import prompt
 
@@ -60,10 +60,35 @@ class Bot:
         self.__mode = value
 
     def iterate_book(self):
-        for i, record in enumerate(AgentBookIterator(self.book)):
-            # print(f'{i}: {record}')
-            print("{:<3}|{}".format(i, record))
-            print("___|__")
+        max_key_length = max(len(key) for key in self.book.keys())
+        print(max_key_length)
+
+        max_name = 0
+        max_phone = 0
+        max_emai = 0
+        for value in self.book.data.items():
+            Name = str(value[1].call_sign)
+            email = str(value[1].email) if value[1].email is not None else 'Не вказано'
+            phones = ', '.join([str(phone) for phone in value[1].phones])
+            birthday = str(value[1].days_to_birthday()) if value[1].birthday is not None else "Не вказано"
+            max_name = len(max(Name, key=lambda x: len(x))) if len(
+                max(Name, key=lambda x: len(x))) > max_name else max_name
+            max_phone = len(max(phones, key=lambda x: len(x))) if len(
+                max(Name, key=lambda x: len(x))) > max_phone else max_phone
+            max_emai = len(max(email, key=lambda x: len(x))) if len(
+                max(Name, key=lambda x: len(x))) > max_emai else max_emai
+
+        print(" | {:15} | {:15} | {:15} | {:15} |".format('Agent call sign'.ljust(max_name),
+                                                          'Email'.ljust(max_emai),
+                                                          'Phones'.ljust(max_phone), 'Days to birthday', 'Address'))
+        for value in self.book.data.items():
+            Name = str(value[1].call_sign)
+            email = str(value[1].email) if value[1].email is not None else 'Не вказано'
+            phones = ', '.join([str(phone) for phone in value[1].phones])
+            birthday = str(value[1].days_to_birthday()) if value[1].birthday is not None else "Не вказано"
+
+            print(" | {:15} | {:15} | {:15} | {:15} |".format(Name.ljust(max_name), email.ljust(max_emai),
+                                                              phones, birthday) + SEPARATOR)
 
     def birthday_iterate_book(self, days: int = 7):
         print(f'Targets in next {days} days:')

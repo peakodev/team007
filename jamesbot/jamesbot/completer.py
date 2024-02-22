@@ -38,6 +38,7 @@ completer_books = NestedCompleter.from_nested_dict({  # autocompleter for Contac
     'bday': {'Вкажіть "ім''я користувача" ': None},
     'find': {'Вкажіть декілька (не меньше 3-х) літер із імені або цифр із номера телефону ': None},
     'help': {'Щоб отримати довідку про команди, натисніть Enter': None},
+    'exit': None
 })
 completer_files = NestedCompleter.from_nested_dict({  # autocompleter for Contacts books mode
     'organize_files': None,
