@@ -139,10 +139,9 @@ def add_birthday(param, record):
 
 @check_param(2)
 def add_email(param, record):
-    book.add_email(param[0], param[1].replace('.', '-'))
-    return 'Користувачеві ' + Fore.LIGHTBLUE_EX + f' {param[0]} ' + Fore.RESET + \
-        ' встановлено Emall ' + Fore.LIGHTBLUE_EX + f' {param[1]} ' + Fore.RESET
-
+    book.add_email(param[0], param[1])
+    return 'Користувачеві '+Fore.LIGHTBLUE_EX+f' {param[0]} '+Fore.RESET+\
+           ' встановлено Emall '+Fore.LIGHTBLUE_EX+f' {param[1]} '+Fore.RESET
 
 @check_param(1)
 def next_birthday(param, record):
@@ -173,8 +172,9 @@ def show_all():
 
 @check_param(1)
 def find_phone(param, record):
-    phone = record.find_phone(param[0])  # Не понятна работа !!!!!!!!!!!
-    return phone
+    phones = book.get_phones(param[0])
+
+    print(', '.join([str(phone) for phone in phones]))
 
 
 '''-------------------------------------------------------------------------------------'''
@@ -233,7 +233,7 @@ def bot_start():
         'find': find_users,
 
         'add_note': bot.notes.add_note,
-        'show_all_note': bot.notes.show_all_notes,
+        'show_note_all': bot.notes.show_all_notes,
         'add_tag': bot.notes.add_note_tag,
         'edit_note': bot.notes.edit_note,
         'remove_note': bot.notes.remove_note,
