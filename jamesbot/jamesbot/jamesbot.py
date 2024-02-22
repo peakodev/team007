@@ -1,12 +1,13 @@
 from agent_notes.test_notes import generate_notes
 from bot_class import Bot
+from xfiles_sorter import organize_files
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
-from completer import completer, completer_books
+from completer import completer, completer_books, completer_files
 
 
 def show_help():  # separated help command for different modes
-    available_commands = {
+    available_commands_notes = {
         'add note': "add new note , you can specify tags with #",
         'show notes all': "display all notes",
         'note add tag': 'add a tag to existing note by id',
@@ -14,7 +15,8 @@ def show_help():  # separated help command for different modes
         'remove note': "remove existing note by id",
         'find notes': 'find notes by any matches in text or id',
         'exit': "for exit",
-        'help': "show help"
+        'help': "show help",
+        'return': 'returns you to previous menu'
     }
     available_commands_book = {
         'contact': 'Add a new contact',
@@ -22,19 +24,24 @@ def show_help():  # separated help command for different modes
         'delete': 'remove contact by name',
         'target': 'Find contact',
         'all targets': 'List all contacts',
-        'coming targets': 'Show contact with birthday in next week or specified number of days'
+        'coming targets': 'Show contact with birthday in next week or specified number of days',
+        'return': 'returns you to previous menu'
     }
     available_commands_xfiles = {
         'organize files': 'organize files',
         'exit': "for exit",
-        'help': "show help"
+        'help': "show help",
+        'return': 'returns you to previous menu'
 
     }
     if Bot().mode == '1':
         for key, description in available_commands_book.items():
             print("{:<20} -> {:>}".format(key, description))
     if Bot().mode == '2':
-        for key, description in available_commands.items():
+        for key, description in available_commands_notes.items():
+            print("{:<20} -> {:>}".format(key, description))
+    if Bot().mode == '3':
+        for key, description in available_commands_xfiles.items():
             print("{:<20} -> {:>}".format(key, description))
 
 
@@ -59,8 +66,7 @@ def input_handler(input_string):
 def command_handler(command, input_string):
     user_command = Bot().commands.get(command)
     if input_string:
-        text, *tag = input_string.strip().split('--')
-        ids = None
+        text, *tag = input_string.strip().split('#')
         if text.strip().split(' ', 1)[0].isdigit():
             ids, *text = text.strip().split(' ', 1)  # Does not pars tags for edit note
             user_command(ids, *text)
@@ -76,16 +82,6 @@ def book_command_handler(command, input_string):
         return user_command(*input_string.strip().split(' '))
     else:
         return user_command()
-
-
-# def get_agent_book():
-#     for record in AgentBookIterator(Bot().book):
-#         print(str(record))
-#
-#
-# def get_agent_book_birthday(days=1):
-#     for record in ComingUpBirthdayAgentBookIterator(Bot().book, after_days=days):
-#         print(str(record))
 
 
 def bot_start():
@@ -113,20 +109,22 @@ def bot_start():
         'exit': bot_exit,
         'return': bot.change_mode,
 
-        'add note': bot.notes.add_note,
-        'show notes all': bot.notes.show_all_notes,
-        'note add tag': bot.notes.add_note_tag,
-        'edit note': bot.notes.edit_note,
-        'remove note': bot.notes.remove_note,
-        'find notes': bot.notes.find_notes,
+        'add_note': bot.notes.add_note,
+        'show_all': bot.notes.show_all_notes,
+        'add_tag': bot.notes.add_note_tag,
+        'edit_note': bot.notes.edit_note,
+        'remove_note': bot.notes.remove_note,
+        'find_notes': bot.notes.find_notes,
         'generate notes': generate_notes,
 
-        'contact': bot.book.add,
+        'add': bot.book.add,
         'change contact': bot.book.change_call_sign,
         'delete': bot.book.delete,
         'target': bot.book.find_record,
         'all targets': bot.iterate_book,
-        'coming targets': bot.birthday_iterate_book
+        'coming targets': bot.birthday_iterate_book,
+
+        'organize_files': organize_files
 
     }
     bot.commands = COMMANDS
@@ -134,7 +132,7 @@ def bot_start():
     while bot.running:
         if bot.mode == '2':  # Notes loop
             try:
-                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar,rprompt=rprompt, style=style,
+                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar, style=style,
                                     complete_while_typing=True)  # Removed right toolbar
                 user_command, input_string = input_handler(str(user_input))
                 # print(len(input_string))
@@ -154,6 +152,15 @@ def bot_start():
             except Exception as e:
                 print(e)
         elif bot.mode == '3':
+            try:
+                user_input = prompt(">>", completer=completer_files, bottom_toolbar=bottom_toolbar, style=style,
+                                    complete_while_typing=True)  # Removed right toolbar
+                user_command, input_string = input_handler(str(user_input))
+                # print(len(input_string))
+                command_handler(user_command, input_string)
+            except Exception as e:
+                print(e)
+        elif bot.mode == '4':
             bot_exit()
         else:
             bot.change_mode()

@@ -22,5 +22,4 @@ def bottom_toolbar():
     if Ccounter is not None:
         return f"Total Contacts:{Bcounter}  Total Notes:{Ccounter} "
 
-# text = prompt('> ', bottom_toolbar=bottom_toolbar)
-# print('You said: %s' % text)
+

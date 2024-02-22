@@ -74,10 +74,12 @@ class Bot:
         print("Please select:\n")
         print("1. Work with Contacts book")
         print("2. Work with Notes")
-        print("3. Exit")
+        print("3. Sort files")
+        print("4. Exit")
         try:
             mode = prompt('>>')
-            if mode in ['1', '2']:
+            if mode in ['1', '2', '3', '4']:
                 self.mode = mode
+                print("Welcome agent, please enter your command, or press Tab to display options")
         except Exception as e:
             print(e)
