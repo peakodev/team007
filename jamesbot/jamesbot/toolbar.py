@@ -1,6 +1,6 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
-from bot_class import Bot
+from .bot_class import Bot
 
 style = Style.from_dict({
     # 'rprompt': 'bg:#ff0066 #ffffff',
