@@ -219,7 +219,7 @@ def add_birthday(param, record):
     
 @check_param(2)
 def add_email(param, record):
-    book.add_email(param[0], param[1].replace('.', '-'))
+    book.add_email(param[0], param[1])
     return 'Користувачеві '+Fore.LIGHTBLUE_EX+f' {param[0]} '+Fore.RESET+\
            ' встановлено Emall '+Fore.LIGHTBLUE_EX+f' {param[1]} '+Fore.RESET
     
