@@ -1,6 +1,5 @@
 from agent_notes.test_notes import generate_notes
-from agent_notes import AgentNotes
-from agent_book import AgentBook
+from bot_class import Bot
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer import completer, completer_books
@@ -37,86 +36,6 @@ def show_help():  # separated help command for different modes
     if Bot().mode == '2':
         for key, description in available_commands.items():
             print("{:<20} -> {:>}".format(key, description))
-
-
-def singleton(class_):
-    instances = {}
-
-    def getinstance(*args, **kwargs):
-        if class_ not in instances:
-            instances[class_] = class_(*args, **kwargs)
-        return instances[class_]
-
-    return getinstance
-
-
-@singleton
-class Bot:
-    def __init__(self):
-        self.__isRunning = True
-        self.__book = None
-        self.__notes = None
-        self.__mode = None
-        self.__commands = dict()
-
-    @property
-    def running(self):
-        return self.__isRunning
-
-    @running.setter
-    def running(self, value):
-        self.__isRunning = value
-
-    @property
-    def notes(self):  # deserialize notes
-        if self.__notes is None:
-            self.__notes = AgentNotes().deserialize()
-        return self.__notes
-
-    @property
-    def book(self) -> AgentBook:
-        if self.__book is None:
-            self.__book = AgentBook().deserialize()
-        return self.__book
-
-    @property
-    def commands(self) -> dict:
-        return self.__commands
-
-    @commands.setter
-    def commands(self, commands: dict):
-        self.__commands = commands
-
-    @property
-    def mode(self):
-        return self.__mode
-
-    @mode.setter
-    def mode(self, value):
-        self.__mode = value
-
-    def iterate_book(self):
-        for i, record in enumerate(AgentBookIterator(self.book)):
-            # print(f'{i}: {record}')
-            print("{:<3}|{}".format(i, record))
-            print("___|__")
-
-    def birthday_iterate_book(self, days: int = 7):
-        print(f'Targets in next {days} days:')
-        for i, record in enumerate(ComingUpBirthdayAgentBookIterator(self.book, days)):
-            print(f'{i}: {record}')
-
-    def change_mode(self):
-        print("Please select:\n")
-        print("1. Work with Contacts book")
-        print("2. Work with Notes")
-        print("3. Exit")
-        try:
-            mode = prompt('>>')
-            if mode in ['1', '2']:
-                self.mode = mode
-        except Exception as e:
-            print(e)
 
 
 def bot_exit():
@@ -215,7 +134,8 @@ def bot_start():
     while bot.running:
         if bot.mode == '2':  # Notes loop
             try:
-                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar)  # Removed right toolbar
+                user_input = prompt(">>", completer=completer, bottom_toolbar=bottom_toolbar,rprompt=rprompt, style=style,
+                                    complete_while_typing=True)  # Removed right toolbar
                 user_command, input_string = input_handler(str(user_input))
                 # print(len(input_string))
                 command_handler(user_command, input_string)
@@ -223,7 +143,8 @@ def bot_start():
                 print(e)
         elif bot.mode == '1':  # Books loop
             try:
-                user_input = prompt(">>", completer=completer_books)
+                user_input = prompt(">>", completer=completer_books, bottom_toolbar=bottom_toolbar, style=style,
+                                    complete_while_typing=True)
                 user_command, input_string = input_handler(str(user_input))
                 # print('You entered command:', user_command, "with such params", input_string)
                 result = book_command_handler(user_command, input_string)
@@ -236,6 +157,7 @@ def bot_start():
             bot_exit()
         else:
             bot.change_mode()
+
 
 if __name__ == "__main__":
     bot_start()

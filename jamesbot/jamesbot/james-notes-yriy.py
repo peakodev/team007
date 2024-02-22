@@ -1,13 +1,13 @@
 # from agent_book.agent_book.entities import AgentBook
-from entities import AgentBook
+from agent_book import AgentBook
 from prompt_toolkit import prompt
 from toolbar import style, bottom_toolbar, rprompt
 from completer2 import completer
 from colorama import init
-init()
+
 from colorama import Fore, Back, Style
 
-
+init()
 book = AgentBook()
  
 def show_help():
