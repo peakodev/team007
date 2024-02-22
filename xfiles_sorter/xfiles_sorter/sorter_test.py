@@ -5,18 +5,19 @@ from xfiles_sorter import organize_files, remove_empty_folders
 
 
 def handle_command(command):
-    if command == "organize":
+    if command == "decipher":
         # Здесь вы можете запросить у пользователя путь к папке или задать его заранее
-        folder_path = input("Введите путь к папке для организации: ")
-        organize_files(folder_path)
+        folder_path = input("Введите путь к папке для расшифровфки: ")
+        target_folder_path = input("Введите путь куда переместить расшифрованные файлы:")
+        organize_files(folder_path, target_folder_path)
     elif command == "remove":
-        folder_path = input("Введите путь к папке для очистки: ")
+        folder_path = input("Введите путь к папке для удаления файлов: ")
         remove_empty_folders(folder_path)
     # elif command == "normalize":
     #     folder_path = input("Введите путь к папке для розшифроки: ")
     #     normalize_files(folder_path)
     elif command == "help":
-        print("Доступные команды:\norganize - организовать файлы в указанной папке\nexit - выйти из программы\nremove - remove folder") #\nnormalize - translate
+        print("Доступные команды:\ndecipher - расшифровать файлы в указанной папке\nremove - remove folder\nexit - выйти из программы") #\nnormalize - translate
     elif command == "exit":
         print("Выход из программы...")
         exit()
@@ -24,7 +25,7 @@ def handle_command(command):
         print("Неизвестная команда. Введите 'help' для списка доступных команд.")
 
 def main():
-    print("Консольный бот для организации файлов. Введите 'help' для списка команд.")
+    print("Консольный бот для разшифровки файлов. Введите 'help' для списка команд.")
     while True:
         command = input("Введите команду: ")
         handle_command(command)
